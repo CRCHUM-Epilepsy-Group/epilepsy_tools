@@ -1,0 +1,30 @@
+[build-system]
+    build-backend = "setuptools.build_meta"
+    requires      = [ "setuptools >= 61.0" ]
+
+[project]
+    classifiers = [
+        "Development Status :: 3 - Alpha",
+        "Intended Audience :: Developers",
+        "Programming Language :: Python :: 3 :: Only",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+    ]
+    dynamic = [ "dependencies" ]
+    name = "epilepsy_tools"
+    readme = { file = "README.md", content-type = "text/markdown" }
+    requires-python = ">=3.10"
+    version = "24.10.1"
+
+[project.optional-dependencies]
+    test = [ "pytest" ]
+
+[tool.setuptools.dynamic]
+    dependencies = { file = "requirements.txt" }
+
+[tool.pytest.ini_options]
+    filterwarnings = [
+        "ignore::UserWarning:c3d.*",
+    ]
