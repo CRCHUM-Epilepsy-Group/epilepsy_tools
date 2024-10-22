@@ -14,11 +14,11 @@ warnings.filterwarnings("ignore", module="c3d.c3d")
 
 __all__ = [
     "SENSOR_LABELS",
+    "OriginalRecordingInfo",
     "downsample",
     "extract_emg_data",
     "extract_acceleration_data",
     "load_data",
-    "generate_timestamps",
     "get_record_info",
 ]
 
@@ -56,7 +56,6 @@ class OriginalRecordingInfo:
         - startTime: start date and time of recording.
         - endTime: end date and time of recording.
         - duration: duration of recording.
-
         """
         time: Sequence[datetime] = data.index  # type: ignore
         period = (time[1] - time[0]).total_seconds()
@@ -144,7 +143,7 @@ def extract_acceleration_data(data: pd.DataFrame) -> pd.DataFrame:
 def get_record_info(
     *, file: str | PathLike | None = None, data: pd.DataFrame | None = None
 ) -> OriginalRecordingInfo:
-    """Get the recording info of a given .c3d file.
+    """Get the recording info of a given .c3d file or data already loaded.
     Return an OriginalRecordingInfo object with the relevant information.
     """
     if data is None and file is not None:
@@ -167,6 +166,9 @@ def load_data(file: str | PathLike) -> pd.DataFrame:
     the shape of the DataFrame might be different.
     """
     _log.debug(f"reading file {file}")
+    if Path(file).suffix.lower() != ".c3d":
+        raise ValueError(f"{file} is not a .c3d file")
+
     with open(file, "rb") as c3dfile:
         frames = c3d.Reader(c3dfile)
         analog_samples = []

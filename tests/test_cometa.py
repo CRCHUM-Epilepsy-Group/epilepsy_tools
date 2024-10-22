@@ -1,4 +1,5 @@
 import logging
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -34,6 +35,14 @@ class TestLoadData(BaseTestCase):
 
             self.assertIsInstance(data, pd.DataFrame)
             self.assertEqual(data.shape, DATA_SHAPES[i])
+
+    def test_load_non_c3d(self) -> None:
+        with self.assertRaises(ValueError), tempfile.TemporaryDirectory() as d:
+            file = Path(d) / "not_a_c3d.txt"
+            with open(file, "w") as f:
+                f.write("not valid data")
+
+            cometa.load_data(file)
 
 
 class TestDownsample(DataTestCase):
