@@ -9,7 +9,29 @@ The list of required packages can be found in `requirements.txt`, and ahould be 
 
 ## Installation
 
-## Usage
+You can install from the repository directly, with the following command, with [Git](https://git-scm.com/downloads) installed on your computer:
+```sh
+pip install git+https://github.com/CRCHUM-Epilepsy-Group/epilepsy_tools.git
+```
+
+You can also clone the repository or download it locally, and run the following command inside the root directory of the project:
+```sh
+pip install .
+```
+
+## Quick Example
+
+This is a quick example that loads data from a Cometa file (.c3d)
+
+```py
+from epilepsy_tools import cometa
+
+file_path = "some/directory/data.c3d
+
+data = cometa.load_data(file_path)  # returns a pandas.DataFrame
+recording_info = cometa.get_record_info(data=data)
+emg_data = cometa.extract_emg_data(data)  # returns a pandas.DataFrame
+```
 
 ## Devices
 
@@ -21,3 +43,17 @@ You can import the subpackage for the Cometa data with:
 ```py
 from epilepsy_tools import cometa
 ```
+
+Functions:
+
+- `cometa.load_data(file)`: Load the data from a .c3d file. Returns a pandas.DataFrame.
+- `cometa.downsample(data, ratio)`: Returns a pandas.DataFrame with a lower frequency sampling.
+- `cometa.extract_eeg_data(data)`: Returns only the EMG data from the provided pandas.DataFrame.
+- `cometa.extract_acceleration_data(data)`: Returns only the acceleration data from the provided pandas.DataFrame.
+- `cometa.get_recording_info(*, file, data)`: Get the metadata for the recording. Provide either the file (that will be loaded) or already loaded data. Returns a `cometa.OriginalRecordingInfo`.
+
+Classes:
+- `cometa.OriginalRecordingInfo`: Metadata for a recording. Construct with `cometa.get_recording_info`.
+
+Constants:
+- `cometa.SENSOR_LABELS`: A list of labels for the sensors currently used.
