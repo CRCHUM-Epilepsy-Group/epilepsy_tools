@@ -76,11 +76,11 @@ class TestModalitySelection(DataTestCase):
         self.assertEqual(accel.shape, (DATA_SHAPES[0][0], 3 * DATA_SHAPES[0][1] // 4))
 
 
-class TestOriginalRecordingInfo(DataTestCase):
+class TestRecordingInfo(DataTestCase):
     def _assert_recording_info(
-        self, recording_info: cometa._data.OriginalRecordingInfo
+        self, recording_info: cometa._data.RecordingInfo
     ) -> None:
-        self.assertIsInstance(recording_info, cometa._data.OriginalRecordingInfo)
+        self.assertIsInstance(recording_info, cometa._data.RecordingInfo)
         self.assertEqual(recording_info.fs, 2000.0)
         self.assertEqual(recording_info.samples, DATA_SHAPES[0][0])
         self.assertEqual(len(recording_info.channels), DATA_SHAPES[0][1])

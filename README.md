@@ -43,17 +43,18 @@ You can import the subpackage for the Cometa data with:
 ```py
 from epilepsy_tools import cometa
 ```
+It uses the [c3d](https://pypi.org/project/c3d/) package internally.
 
 Functions:
 
 - `cometa.load_data(file)`: Load the data from a .c3d file. Returns a pandas.DataFrame.
 - `cometa.downsample(data, ratio)`: Returns a pandas.DataFrame with a lower frequency sampling.
-- `cometa.extract_eeg_data(data)`: Returns only the EMG data from the provided pandas.DataFrame.
+- `cometa.extract_emg_data(data)`: Returns only the EMG data from the provided pandas.DataFrame.
 - `cometa.extract_acceleration_data(data)`: Returns only the acceleration data from the provided pandas.DataFrame.
-- `cometa.get_recording_info(*, file, data)`: Get the metadata for the recording. Provide either the file (that will be loaded) or already loaded data. Returns a `cometa.OriginalRecordingInfo`.
+- `cometa.get_recording_info(*, file, data)`: Get the metadata for the recording. Provide either the file (that will be loaded) or already loaded data. Returns a `cometa.RecordingInfo`.
 
 Classes:
-- `cometa.OriginalRecordingInfo`: Metadata for a recording. Construct with `cometa.get_recording_info`.
+- `cometa.RecordingInfo`: Metadata for a recording. Construct with `cometa.get_recording_info`.
 
 Constants:
 - `cometa.SENSOR_LABELS`: A list of labels for the sensors currently used.

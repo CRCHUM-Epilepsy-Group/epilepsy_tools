@@ -14,7 +14,7 @@ warnings.filterwarnings("ignore", module="c3d.c3d")
 
 __all__ = [
     "SENSOR_LABELS",
-    "OriginalRecordingInfo",
+    "RecordingInfo",
     "downsample",
     "extract_emg_data",
     "extract_acceleration_data",
@@ -42,10 +42,9 @@ SENSOR_LABELS = (  # these might need modifications if sensors are edited
 ACCELERATION_SUFFIXES = (":X", ":Y", ":Z")
 
 
-class OriginalRecordingInfo:
+class RecordingInfo:
     """
-    Stores metadata of original recording (raw signals).
-
+    Stores metadata of the recording (raw signals).
     """
 
     def __init__(self, data: pd.DataFrame):
@@ -111,6 +110,7 @@ def generate_timestamps(
         periods=len(time),
         freq=timedelta(seconds=T),
     )
+    timestamps.name = "Timestamps"
     _log.debug("Success!")
 
     return timestamps
@@ -142,9 +142,9 @@ def extract_acceleration_data(data: pd.DataFrame) -> pd.DataFrame:
 
 def get_record_info(
     *, file: str | PathLike | None = None, data: pd.DataFrame | None = None
-) -> OriginalRecordingInfo:
+) -> RecordingInfo:
     """Get the recording info of a given .c3d file or data already loaded.
-    Return an OriginalRecordingInfo object with the relevant information.
+    Return an RecordingInfo object with the relevant information.
     """
     if data is None and file is not None:
         _data = load_data(file)
@@ -156,7 +156,7 @@ def get_record_info(
         # both are None, or both are set
         raise ValueError("Exactly one of file or data must be set at a time.")
 
-    return OriginalRecordingInfo(_data)
+    return RecordingInfo(_data)
 
 
 def load_data(file: str | PathLike) -> pd.DataFrame:
@@ -194,7 +194,6 @@ def load_data(file: str | PathLike) -> pd.DataFrame:
     # Generate timestamps
     timestamps = generate_timestamps(file, time)  # type: ignore
     data.index = timestamps
-    data.index.name = "Timestamp"
     data.index = pd.to_datetime(data.index, format=DATETIME_FORMAT)
 
     return data
