@@ -1,4 +1,3 @@
-import logging
 import tempfile
 import unittest
 from pathlib import Path
@@ -6,9 +5,6 @@ from pathlib import Path
 import pandas as pd
 
 from epilepsy_tools import cometa
-
-_log = logging.getLogger("epilepsy_tools")
-_log.setLevel(logging.INFO)
 
 DATA_SHAPES = [
     (2573432, 32),

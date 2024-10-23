@@ -58,3 +58,13 @@ Classes:
 
 Constants:
 - `cometa.SENSOR_LABELS`: A list of labels for the sensors currently used.
+
+## Logging
+
+Enable logging for the module with:
+
+```py
+import logging
+
+logging.getLogger("epilepsy_tools").setLevel(logging.DEBUG)
+```
