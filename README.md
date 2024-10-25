@@ -29,7 +29,7 @@ from epilepsy_tools import cometa
 file_path = "some/directory/data.c3d
 
 data = cometa.load_data(file_path)  # returns a pandas.DataFrame
-recording_info = cometa.get_record_info(data=data)
+recording_info = cometa.RecordingInfo.from_data(data)
 emg_data = cometa.extract_emg_data(data)  # returns a pandas.DataFrame
 ```
 
