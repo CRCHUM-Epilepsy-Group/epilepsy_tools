@@ -7,8 +7,8 @@ import pandas as pd
 from epilepsy_tools import cometa
 
 DATA_SHAPES = [
-    (2573432, 32),
     (2784802, 32),
+    (3617662, 32),
 ]
 
 
