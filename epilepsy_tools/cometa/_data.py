@@ -19,7 +19,6 @@ __all__ = [
     "extract_emg_data",
     "extract_acceleration_data",
     "load_data",
-    "get_record_info",
 ]
 
 _log = logging.getLogger(__name__)
@@ -45,6 +44,7 @@ ACCELERATION_SUFFIXES = (":X", ":Y", ":Z")
 class RecordingInfo:
     """
     Stores metadata of the recording (raw signals).
+    Construct with `RecordingInfo.from_file` or `RecordingInfo.from_data`.
     """
 
     def __init__(self, data: pd.DataFrame):
@@ -68,10 +68,24 @@ class RecordingInfo:
 
     def __repr__(self) -> str:
         return (
-            f"<{self.__class__.__name__}, fs={self.fs}, samples={self.samples}, "
+            f"{self.__class__.__name__}(fs={self.fs}, samples={self.samples}, "
             f"channels={self.channels}, start_time={self.start_time}, "
-            f"end_time={self.end_time}>"
+            f"end_time={self.end_time})"
         )
+
+    @classmethod
+    def from_file(cls, file: str | PathLike) -> RecordingInfo:
+        """Get the recording info of a given .c3d file."""
+
+        data = load_data(file)
+        return cls(data)
+
+    @classmethod
+    def from_data(cls, data: pd.DataFrame) -> RecordingInfo:
+        """Get the recording info of data already loaded.
+        This is equivalent to instanciating the class directly.
+        """
+        return cls(data)
 
 
 def generate_timestamps(
@@ -138,25 +152,6 @@ def extract_acceleration_data(data: pd.DataFrame) -> pd.DataFrame:
     """
     accel_cols = [c for c in data.columns if c.endswith(ACCELERATION_SUFFIXES)]
     return data[accel_cols]
-
-
-def get_record_info(
-    *, file: str | PathLike | None = None, data: pd.DataFrame | None = None
-) -> RecordingInfo:
-    """Get the recording info of a given .c3d file or data already loaded.
-    Return an RecordingInfo object with the relevant information.
-    """
-    if data is None and file is not None:
-        _data = load_data(file)
-
-    elif data is not None and file is None:
-        _data = data
-
-    else:
-        # both are None, or both are set
-        raise ValueError("Exactly one of file or data must be set at a time.")
-
-    return RecordingInfo(_data)
 
 
 def load_data(file: str | PathLike) -> pd.DataFrame:

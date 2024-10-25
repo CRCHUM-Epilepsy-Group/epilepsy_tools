@@ -51,10 +51,9 @@ Functions:
 - `cometa.downsample(data, ratio)`: Returns a pandas.DataFrame with a lower frequency sampling.
 - `cometa.extract_emg_data(data)`: Returns only the EMG data from the provided pandas.DataFrame.
 - `cometa.extract_acceleration_data(data)`: Returns only the acceleration data from the provided pandas.DataFrame.
-- `cometa.get_recording_info(*, file, data)`: Get the metadata for the recording. Provide either the file (that will be loaded) or already loaded data. Returns a `cometa.RecordingInfo`.
 
 Classes:
-- `cometa.RecordingInfo`: Metadata for a recording. Construct with `cometa.get_recording_info`.
+- `cometa.RecordingInfo`: Metadata for a recording. Construct with `cometa.RecordingInfo.from_file` or `cometa.RecordingInfo.from_data`.
 
 Constants:
 - `cometa.SENSOR_LABELS`: A list of labels for the sensors currently used.

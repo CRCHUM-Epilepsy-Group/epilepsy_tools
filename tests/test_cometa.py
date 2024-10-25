@@ -83,19 +83,11 @@ class TestRecordingInfo(DataTestCase):
         self.assertLess(recording_info.start_time, recording_info.end_time)
 
     def test_get_recording_info_from_file(self) -> None:
-        recording_info = cometa.get_record_info(file=self.c3d_files[0])
+        recording_info = cometa.RecordingInfo.from_file(self.c3d_files[0])
 
         self._assert_recording_info(recording_info)
 
     def test_get_recording_info_from_data(self) -> None:
-        recording_info = cometa.get_record_info(data=self.data)
+        recording_info = cometa.RecordingInfo.from_data(self.data)
 
         self._assert_recording_info(recording_info)
-
-    def test_get_recording_info_no_arguments(self) -> None:
-        with self.assertRaises(ValueError):
-            cometa.get_record_info()
-
-    def test_get_recording_info_both_arguments(self) -> None:
-        with self.assertRaises(ValueError):
-            cometa.get_record_info(file="not/a/real/file.c3d", data=pd.DataFrame())
