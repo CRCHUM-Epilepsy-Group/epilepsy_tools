@@ -53,10 +53,28 @@ Functions:
 - `cometa.extract_acceleration_data(data)`: Returns only the acceleration data from the provided pandas.DataFrame.
 
 Classes:
+
 - `cometa.RecordingInfo`: Metadata for a recording. Construct with `cometa.RecordingInfo.from_file` or `cometa.RecordingInfo.from_data`.
 
 Constants:
+
 - `cometa.SENSOR_LABELS`: A list of labels for the sensors currently used.
+
+### Hexoskin
+
+You can import the subpackage for the Hexoskin data with:
+```py
+from epilepsy_tools import hexoskin
+```
+It uses the [pyEDFlib](https://pypi.org/project/pyEDFlib/) package internally.
+
+Functions:
+
+- `hexoskin.load_data(file, *, as_dataframe=True)`: Load the data from a .edf file. Returns a pandas.DataFrame if `as_dataframe` is set to True (the default) or a dict of pandas.Series if set to False.
+
+Classes:
+
+- `hexoskin.RecordingInfo`: Metadata for a recording. Construct with `hexoskin.RecordingInfo.from_file`.
 
 ## Logging
 
