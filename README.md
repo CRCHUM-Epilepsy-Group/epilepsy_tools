@@ -51,6 +51,9 @@ Functions:
 - `cometa.downsample(data, ratio)`: Returns a pandas.DataFrame with a lower frequency sampling.
 - `cometa.extract_emg_data(data)`: Returns only the EMG data from the provided pandas.DataFrame.
 - `cometa.extract_acceleration_data(data)`: Returns only the acceleration data from the provided pandas.DataFrame.
+- `cometa.plot_emg(data)`: Plot the EMG data from a Cometa DataFrame.
+- `cometa.plot_acceleration(data, *, norm=True)`: Plot the acceleration from a Cometa DataFrame. If norm=True (the default), calculate the norm of the acceleration vectors for each sensors (the X, Y and Z components) and plot that.
+
 
 Classes:
 

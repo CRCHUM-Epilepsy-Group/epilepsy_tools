@@ -25,6 +25,9 @@
     dependencies = { file = "requirements.txt" }
 
 [tool.pytest.ini_options]
+    addopts = [
+        "--import-mode=importlib",
+    ]
     filterwarnings = [
         "ignore::UserWarning:c3d.*",
     ]

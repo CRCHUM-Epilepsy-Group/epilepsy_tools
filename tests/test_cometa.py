@@ -1,3 +1,4 @@
+import logging
 import tempfile
 import unittest
 from pathlib import Path
@@ -5,23 +6,30 @@ from pathlib import Path
 import pandas as pd
 
 from epilepsy_tools import cometa
+from epilepsy_tools.cometa._data import (
+    extract_acceleration_data,
+    extract_emg_data,
+)
 
 DATA_SHAPES = [
     (2784802, 32),
     (3617662, 32),
 ]
+TESTS_IMAGES = Path("tests/images")
 
 
 class BaseTestCase(unittest.TestCase):
-    def setUp(self) -> None:
+    @classmethod
+    def setUpClass(cls) -> None:
         c3d_file_path = Path("tests/c3d_sample/")
-        self.c3d_files = list(c3d_file_path.glob("*.c3d"))
+        cls.c3d_files = list(c3d_file_path.glob("*.c3d"))
 
 
 class DataTestCase(BaseTestCase):
-    def setUp(self) -> None:
-        super().setUp()
-        self.data = cometa.load_data(self.c3d_files[0])
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        cls.data = cometa.load_data(cls.c3d_files[0])
 
 
 class TestLoadData(BaseTestCase):
@@ -91,3 +99,40 @@ class TestRecordingInfo(DataTestCase):
         recording_info = cometa.RecordingInfo.from_data(self.data)
 
         self._assert_recording_info(recording_info)
+
+
+class TestPlots(DataTestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        # remove some matplotlib logging
+        logging.getLogger("matplotlib").setLevel(logging.WARNING)
+        # make sure the directory exists first
+        TESTS_IMAGES.mkdir(exist_ok=True)
+
+    def test_plot_emg(self) -> None:
+        fig = cometa.plot_emg(self.data)
+        self.assertEqual(len(fig.axes), len(extract_emg_data(self.data).columns))
+        fig.savefig(TESTS_IMAGES / "test_plot_emg.png")
+
+    def test_plot_emg_select_channels(self) -> None:
+        n_emg_channels = 6
+        select_channels = cometa.extract_emg_data(self.data).iloc[:, :n_emg_channels]
+
+        fig = cometa.plot_emg(select_channels)
+        self.assertEqual(len(fig.axes), n_emg_channels)
+        fig.savefig(TESTS_IMAGES / "test_plot_emg_select_channels.png")
+
+    def test_plot_acceleration(self) -> None:
+        fig = cometa.plot_acceleration(self.data)
+        self.assertEqual(
+            len(fig.axes), len(extract_acceleration_data(self.data).columns) // 3
+        )
+        fig.savefig(TESTS_IMAGES / "test_plot_acceleration.png")
+
+    def test_plot_acceleration_no_norm(self) -> None:
+        fig = cometa.plot_acceleration(self.data, norm=False)
+        self.assertEqual(
+            len(fig.axes), len(extract_acceleration_data(self.data).columns)
+        )
+        fig.savefig(TESTS_IMAGES / "test_plot_acceleration_no_norm.png")
