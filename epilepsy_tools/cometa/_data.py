@@ -42,20 +42,26 @@ ACCELERATION_SUFFIXES = (":X", ":Y", ":Z")
 
 
 class RecordingInfo:
-    """
-    Stores metadata of the recording (raw signals).
+    """Stores metadata of the recording (raw signals).
     Construct with `RecordingInfo.from_file` or `RecordingInfo.from_data`.
+
+    Attributes
+    ----------
+    fs : float
+        Original sampling frequency in Hz (before downsampling).
+    samples : int
+        Total number of data points.
+    channels : list[str]
+        List of channel labels.
+    start_time : datetime.datetime
+        Start date and time of recording.
+    end_time : datetime.datetime
+        End date and time of recording.
+    duration : datetime.timedelta
+        Duration of recording.
     """
 
     def __init__(self, data: pd.DataFrame):
-        """
-        - fs: original sampling frequency in Hz (before downsampling).
-        - samples: total number of data points.
-        - channels: list of channel labels.
-        - startTime: start date and time of recording.
-        - endTime: end date and time of recording.
-        - duration: duration of recording.
-        """
         time: Sequence[datetime] = data.index  # type: ignore
         period = (time[1] - time[0]).total_seconds()
 
@@ -75,8 +81,18 @@ class RecordingInfo:
 
     @classmethod
     def from_file(cls, file: str | PathLike) -> RecordingInfo:
-        """Get the recording info of a given .c3d file."""
+        """Get the recording info of a given .c3d file.
 
+        Parameters
+        ----------
+        file : str | PathLike
+            Path of the .c3d file.
+
+        Returns
+        -------
+        RecordingInfo
+            The information of the recording.
+        """
         data = load_data(file)
         return cls(data)
 
@@ -84,6 +100,16 @@ class RecordingInfo:
     def from_data(cls, data: pd.DataFrame) -> RecordingInfo:
         """Get the recording info of data already loaded.
         This is equivalent to instanciating the class directly.
+
+        Parameters
+        ----------
+        data : pandas.DataFrame
+            The Cometa data loaded from `cometa.load_data`.
+
+        Returns
+        -------
+        RecordingInfo
+            The information of the recording.
         """
         return cls(data)
 
@@ -95,6 +121,18 @@ def generate_timestamps(
     the information already.
     This is based on the last modification time of the file, the time between
     data points, and the length of the recording.
+
+    Parameters
+    ----------
+    c3d_filepath : str | PathLike
+        Path of the .c3d file.
+    time : Sequence[float]
+        A sequence of the time elapsed since the beginning of the recordinf in seconds.
+
+    Returns
+    -------
+    timestamps : pandas.DatetimeIndex
+        A pandas.Index instance of datetime.datetime objects.
     """
     _log.debug("Retrieving recording information...")
 
@@ -133,6 +171,19 @@ def generate_timestamps(
 def downsample(data: pd.DataFrame, *, ratio: int) -> pd.DataFrame:
     """Downsample the data to every `ratio` values.
     ratio=2 means keep half of the data, 3 keep only the third.
+
+    Parameters
+    ----------
+    data : pandas.DataFrame
+        The Cometa data loaded from `cometa.load_data`.
+    ratio : int
+        The ratio of the data to keep. 2 means keep half of the data (1/2),
+        3 means keep only one value every three (1/3).
+
+    Returns
+    -------
+    pandas.DataFrame
+        The downsampled DataFrame
     """
     downsampled_data = data.iloc[::ratio, :].copy()
     return downsampled_data
@@ -141,6 +192,16 @@ def downsample(data: pd.DataFrame, *, ratio: int) -> pd.DataFrame:
 def extract_emg_data(data: pd.DataFrame) -> pd.DataFrame:
     """Take the DataFrame returned by `load_data` and keep only the columns
     containing the EMG data.
+
+    Parameters
+    ----------
+    data : pandas.DataFrame
+        The Cometa data loaded from `cometa.load_data`.
+
+    Returns
+    -------
+    pandas.DataFrame
+        A DataFrame with only the EMG data.
     """
     emg_cols = [c for c in data.columns if not c.endswith(ACCELERATION_SUFFIXES)]
     return data[emg_cols]
@@ -149,16 +210,40 @@ def extract_emg_data(data: pd.DataFrame) -> pd.DataFrame:
 def extract_acceleration_data(data: pd.DataFrame) -> pd.DataFrame:
     """Take the DataFrame returned by `load_data` and keep only the columns
     containing the acceleration data.
+
+    Parameters
+    ----------
+    data : pandas.DataFrame
+        The Cometa data loaded from `cometa.load_data`.
+
+    Returns
+    -------
+    pandas.DataFrame
+        A DataFrame with only the acceleration data.
     """
     accel_cols = [c for c in data.columns if c.endswith(ACCELERATION_SUFFIXES)]
     return data[accel_cols]
 
 
 def load_data(file: str | PathLike) -> pd.DataFrame:
-    """
-    Read a .c3d file from the Cometa device.
+    """Read a .c3d file from the Cometa device.
     Depending on how many sensors were installed and which modality was recorded,
     the shape of the DataFrame might be different.
+
+    Parameters
+    ----------
+    file : str | PathLike
+        Path of the .c3d file.
+
+    Returns
+    -------
+    pandas.DataFrame
+        The data inside the .c3d file.
+
+    Raises
+    ------
+    ValueError
+        The file provided is not a .c3d file.
     """
     _log.debug(f"reading file {file}")
     if Path(file).suffix.lower() != ".c3d":

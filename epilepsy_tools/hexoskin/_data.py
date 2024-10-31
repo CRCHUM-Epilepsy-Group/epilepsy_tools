@@ -25,6 +25,18 @@ _log = logging.getLogger(__name__)
 
 @dataclass
 class SignalHeader:
+    """Stores information of a signal (or channel).
+
+    Attributes
+    ----------
+    label : str
+        The label of the signal.
+    sample_rate : float
+        The sample rate in Hz of the signal.
+    dimension : str
+        The units of the signal.
+    """
+
     label: str
     sample_rate: float
     dimension: str
@@ -32,6 +44,27 @@ class SignalHeader:
 
 @dataclass
 class RecordingInfo:
+    """Stores metadata of the recording (raw signals).
+    Construct with `RecordingInfo.from_file`.
+
+    Attributes
+    ----------
+    patient_name : str
+        The name of the patient of the recording.
+    sex : str
+        The sex of the patient of the recording.
+    start_time : datetime.datetime
+        The date and time the recording started.
+    birth_date : datetime.date
+        The birth date of the patient of the recording.
+    hexoskin_record_id : int
+        The ID on Hexoskin's platform of the recording.
+    hexoskin_user_id : int
+        The ID on Hexoskin's platform of the patient of the recording.
+    signals : list[SignalHeader]
+        The list of signals (channels) in the recording.
+    """
+
     patient_name: str
     sex: str
     start_time: datetime
@@ -42,7 +75,18 @@ class RecordingInfo:
 
     @classmethod
     def from_file(cls, file: str | PathLike) -> RecordingInfo:
-        """Get the recording info of a given .edf file or data already loaded."""
+        """Get the recording info of a given .edf file or data already loaded.
+
+        Parameters
+        ----------
+        file : str | PathLike
+            Path of the .edf file.
+
+        Returns
+        -------
+        RecordingInfo
+            The information of the recording.
+        """
 
         with pyedflib.EdfReader(str(file)) as reader:
             signal_headers = reader.getSignalHeaders()
@@ -73,6 +117,19 @@ class RecordingInfo:
 
 
 def _parse_label(label: str) -> str:
+    """Extract the name of the channel from the label.
+    Labels have a format of <ID:Name>, so re discard the ID: part.
+
+    Parameters
+    ----------
+    label : str
+        The label of the channel.
+
+    Returns
+    -------
+    str
+        The Name part of the original label.
+    """
     return label[label.index(":") + 1 :]
 
 
@@ -82,10 +139,19 @@ def generate_timestamps(
     """Generate the timestamps for the given parameters. To be used as the
     index of a DataFrame.
 
-    Args:
-        start_time: The datetime to start the timestamps from.
-        sample_rate: The number of points per seconds to generate (in hertz).
-        length: The total number of points to generate
+    Parameters
+    ----------
+    start_time : datetime.datetime
+        The datetime to start the timestamps from.
+    sample_rate : float
+        The number of points per seconds to generate (in hertz).
+    length : int
+        The total number of points to generate.
+
+    Returns
+    -------
+    timestamps : pandas.DatetimeIndex
+        A pandas.Index instance of datetime.datetime objects.
     """
     timestamps = pd.date_range(
         start=start_time,
@@ -112,8 +178,7 @@ def load_data(
 def load_data(
     file: str | PathLike, *, as_dataframe: bool = True
 ) -> pd.DataFrame | dict[str, pd.Series[float]]:
-    """
-    Read a .edf file from the Hexoskin device.
+    """Read a .edf file from the Hexoskin device.
 
     Since not every metric is read with the same sampling rate on the device,
     you can load the data as a DataFrame with `as_dataframe=True` (the default)
@@ -124,6 +189,24 @@ def load_data(
     In the case of a DataFrame with NaNs, you can fill out the missing values
     with the method `DataFrame.ffill` that will use the last non-NaN value to
     fill the DataFrame.
+
+    Parameters
+    ----------
+    file : str | PathLike
+        Path of the .edf file.
+    as_dataframe : bool, optional
+        If the data should be returned in a DataFrame or not (if False, a dict of
+        Series is returned instead), by default True.
+
+    Returns
+    -------
+    data : pandas.DataFrame | dict[str, pandas.Series[float]]
+        The data inside the .edf file.
+
+    Raises
+    ------
+    ValueError
+        The file provided is not a .edf file.
     """
     _log.debug(f"reading file {file}")
     if Path(file).suffix.lower() != ".edf":
