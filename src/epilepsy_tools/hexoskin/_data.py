@@ -12,7 +12,22 @@ import pyedflib
 
 if TYPE_CHECKING:
     from os import PathLike
-    from typing import Literal
+    from typing import Literal, TypedDict
+
+    SignalHeaderDict = TypedDict(
+        "SignalHeaderDict", {"label": str, "sample_frequency": float, "dimension": str}
+    )
+    HeaderDict = TypedDict(
+        "HeaderDict",
+        {
+            "patientname": str,
+            "sex": str,
+            "startdate": datetime,
+            "birthdate": str,
+            "recording_additional": str,
+            "patient_additional": str,
+        },
+    )
 
 
 __all__ = [
@@ -89,13 +104,13 @@ class RecordingInfo:
         """
 
         with pyedflib.EdfReader(str(file)) as reader:
-            signal_headers = reader.getSignalHeaders()
-            header = reader.getHeader()
+            signal_headers: list[SignalHeaderDict] = reader.getSignalHeaders()  # type: ignore
+            header: HeaderDict = reader.getHeader()  # type: ignore
 
         signals = [
             SignalHeader(
                 label=_parse_label(signal_header["label"]),
-                sample_rate=signal_header["sample_rate"],
+                sample_rate=signal_header["sample_frequency"],
                 dimension=signal_header["dimension"],
             )
             for signal_header in signal_headers
@@ -217,7 +232,7 @@ def load_data(
 
     # get the base timestamps
     max_sample_rate = max(
-        signal_header["sample_rate"] for signal_header in signal_headers
+        signal_header["sample_frequency"] for signal_header in signal_headers
     )
     max_length = max(len(signal) for signal in signals)
     timestamps = generate_timestamps(
@@ -232,7 +247,9 @@ def load_data(
     data = pd.DataFrame(index=timestamps)
     for signal, signal_header in zip(signals, signal_headers):
         metric_data = np.full(max_length, fill_value=np.nan)
-        metric_data[:: int(max_sample_rate / signal_header["sample_rate"])] = signal
+        metric_data[:: int(max_sample_rate / signal_header["sample_frequency"])] = (
+            signal
+        )
         data[_parse_label(signal_header["label"])] = metric_data
 
     if not as_dataframe:

@@ -1,8 +1,5 @@
-[build-system]
-    build-backend = "setuptools.build_meta"
-    requires      = [ "setuptools >= 61.0" ]
-
 [project]
+    authors = [ { name = "Snaptraks" } ]
     classifiers = [
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
@@ -11,18 +8,29 @@
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
     ]
-    dynamic = [ "dependencies" ]
-    name = "epilepsy_tools"
+    dependencies = [
+        "c3d>=0.5.2",
+        "matplotlib>=3,<4",
+        "numpy<3",
+        "pandas>=2,<3",
+        "pyedflib>=0.1.38",
+    ]
+    description = "Library to handle data for the various connected wearables used in the epilepsy research lab at CRCHUM."
+    name = "epilepsy-tools"
     readme = { file = "README.md", content-type = "text/markdown" }
     requires-python = ">=3.10"
     version = "24.10.3"
 
-[project.optional-dependencies]
-    test = [ "pytest" ]
+[build-system]
+    build-backend = "setuptools.build_meta"
+    requires      = [ "setuptools >= 61.0" ]
 
-[tool.setuptools.dynamic]
-    dependencies = { file = "requirements.txt" }
+[dependency-groups]
+    test = [
+        "pytest>=8.3.5",
+    ]
 
 [tool.pytest.ini_options]
     addopts = [
