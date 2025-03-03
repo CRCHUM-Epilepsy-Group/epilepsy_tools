@@ -1,7 +1,0 @@
-pandas>=2,<3
-numpy<3  # c3d requires <2, but leave it flexible for eventual update
-matplotlib>=3,<4
-# Cometa
-c3d>=0.5.2
-# Hexoskin
-pyEDFlib>=0.1.38
