@@ -153,7 +153,7 @@ def generate_timestamps(
     _log.debug(f"Recording started at {time_started}")
     _log.debug(f"Recording stopped at {time_stopped}")
     _log.debug(f"Recording duration is {dur} seconds")
-    _log.debug(f"Sample frequency is {1/T} Hz")
+    _log.debug(f"Sample frequency is {1 / T} Hz")
 
     # Generate timestamp for each datapoint
     _log.debug("Generating timestamps...")
@@ -275,5 +275,8 @@ def load_data(file: str | PathLike) -> pd.DataFrame:
     timestamps = generate_timestamps(file, time)  # type: ignore
     data.index = timestamps
     data.index = pd.to_datetime(data.index, format=DATETIME_FORMAT)
+
+    # drop NaNs to be coherent with Cometa software
+    data.fillna(0)
 
     return data
