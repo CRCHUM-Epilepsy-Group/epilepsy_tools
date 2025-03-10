@@ -103,7 +103,7 @@ wheels = [
 
 [[package]]
 name = "epilepsy-tools"
-version = "24.10.3"
+version = "2025.3.2"
 source = { editable = "." }
 dependencies = [
     { name = "c3d" },
