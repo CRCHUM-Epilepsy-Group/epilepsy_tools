@@ -6,7 +6,7 @@ from pathlib import Path
 import pandas as pd
 
 from epilepsy_tools import cometa
-from epilepsy_tools.cometa._data import (
+from epilepsy_tools.cometa.data import (
     extract_acceleration_data,
     extract_emg_data,
 )
@@ -67,7 +67,7 @@ class TestModalitySelection(DataTestCase):
         emg = cometa.extract_emg_data(self.data)
 
         self.assertTrue(
-            all(not c.endswith(cometa._data.ACCELERATION_SUFFIXES) for c in emg.columns)
+            all(not c.endswith(cometa.data.ACCELERATION_SUFFIXES) for c in emg.columns)
         )
         self.assertEqual(emg.shape, (DATA_SHAPES[0][0], DATA_SHAPES[0][1] // 4))
 
@@ -75,16 +75,14 @@ class TestModalitySelection(DataTestCase):
         accel = cometa.extract_acceleration_data(self.data)
 
         self.assertTrue(
-            all(c.endswith(cometa._data.ACCELERATION_SUFFIXES) for c in accel.columns)
+            all(c.endswith(cometa.data.ACCELERATION_SUFFIXES) for c in accel.columns)
         )
         self.assertEqual(accel.shape, (DATA_SHAPES[0][0], 3 * DATA_SHAPES[0][1] // 4))
 
 
 class TestRecordingInfo(DataTestCase):
-    def _assert_recording_info(
-        self, recording_info: cometa._data.RecordingInfo
-    ) -> None:
-        self.assertIsInstance(recording_info, cometa._data.RecordingInfo)
+    def _assert_recording_info(self, recording_info: cometa.data.RecordingInfo) -> None:
+        self.assertIsInstance(recording_info, cometa.data.RecordingInfo)
         self.assertEqual(recording_info.fs, 2000.0)
         self.assertEqual(recording_info.samples, DATA_SHAPES[0][0])
         self.assertEqual(len(recording_info.channels), DATA_SHAPES[0][1])

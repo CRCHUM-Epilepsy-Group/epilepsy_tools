@@ -66,7 +66,7 @@ class TestLoadData(BaseTestCase):
         data = hexoskin.load_data(self.edf_files[0])
 
         for signal, signal_header in zip(signals, signal_headers):
-            label = hexoskin._data._parse_label(signal_header["label"])
+            label = hexoskin.data._parse_label(signal_header["label"])
             non_nan_data = data[label].dropna()
             self.assertEqual(len(signal), len(non_nan_data))
             self.assertListEqual(list(signal), list(non_nan_data))
@@ -90,7 +90,7 @@ class TestRecordingInfo(BaseTestCase):
         self.assertIsInstance(self.recording_info.signals, list)
 
         for signal in self.recording_info.signals:
-            self.assertIsInstance(signal, hexoskin._data.SignalHeader)
+            self.assertIsInstance(signal, hexoskin.data.SignalHeader)
             self.assertIsInstance(signal.dimension, str)
             self.assertIsInstance(signal.label, str)
             self.assertIsInstance(signal.sample_rate, float)

@@ -1,2 +1,2 @@
-from ._data import *  # noqa: F403
-from ._plot import *  # noqa: F403
+from .data import *  # noqa: F403
+from .plot import *  # noqa: F403

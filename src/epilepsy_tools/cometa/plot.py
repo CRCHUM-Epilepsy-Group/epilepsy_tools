@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 
-from ._data import SENSOR_LABELS, extract_acceleration_data, extract_emg_data
+from .data import SENSOR_LABELS, extract_acceleration_data, extract_emg_data
 
 __all__ = [
     "plot_emg",
