@@ -19,6 +19,10 @@ You can also clone the repository or download it locally, and run the following 
 pip install .
 ```
 
+## Documentation
+
+[Documentation can be read here](https://crchum-epilepsy-group.github.io/epilepsy_tools/).
+
 ## Quick Example
 
 This is a quick example that loads data from a Cometa file (.c3d)

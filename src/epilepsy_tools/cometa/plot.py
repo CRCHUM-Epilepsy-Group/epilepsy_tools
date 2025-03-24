@@ -12,18 +12,15 @@ from matplotlib import pyplot as plt
 
 from .data import SENSOR_LABELS, extract_acceleration_data, extract_emg_data
 
-__all__ = [
-    "plot_emg",
-    "plot_acceleration",
-]
-
-_log = logging.getLogger(__name__)
-
 if TYPE_CHECKING:
     from datetime import datetime
 
     from matplotlib.axes import Axes
     from matplotlib.figure import Figure
+
+
+_log = logging.getLogger(__name__)
+
 
 COMETA_COLORS = {
     sensor: color
@@ -48,12 +45,12 @@ def _clean_sensor_label(sensor_label: str) -> str:
 
     Parameters
     ----------
-    sensor_label : str
+    sensor_label : :class:`str`
         The label for the sensor.
 
     Returns
     -------
-    clean_label: str
+    clean_label: :class:`str`
         The label without the coordinate prefix.
     """
     return re.sub(r"\s\:(X|Y|Z)", "", sensor_label)
@@ -65,16 +62,16 @@ def _make_stacked_figure(data: pd.DataFrame) -> tuple[Figure, list[Axes]]:
 
     Parameters
     ----------
-    data : `pandas.DataFrame`
+    data : :class:`pandas.DataFrame`
         The Cometa data loaded from `cometa.load_data`, with possibly selected
         columns.
 
     Returns
     -------
-    fig : `~matplotlib.figure.Figure`
+    fig : :class:`~matplotlib.figure.Figure`
         The Figure containing the plot.
-    axes : `list[~matplotlib.axes.Axes]`
-        A list of Axes from the Figure.
+    axes : list[:class:`~matplotlib.axes.Axes`]
+        A list of :class:`~matplotlib.axes.Axes` from the Figure.
     """
     nrows = len(data.columns)
 
@@ -126,14 +123,14 @@ def _acceleration_norm(data: pd.DataFrame) -> pd.DataFrame:
 
     Parameters
     ----------
-    data : `pandas.DataFrame`
-        The Cometa data loaded from `cometa.load_data`, with possibly selected
+    data : :class:`pandas.DataFrame`
+        The Cometa data loaded from :func:`load_data`, with possibly selected
         columns.
 
     Returns
     -------
-    vector_norm: `pandas.DataFrame`
-        A DataFrame with the vector norm of every sensor.
+    vector_norm: :class:`pandas.DataFrame`
+        A :class:`~pandas.DataFrame` with the vector norm of every sensor.
     """
     vector_norm = pd.DataFrame()
     for key, group in itertools.groupby(
@@ -153,13 +150,13 @@ def plot_emg(data: pd.DataFrame) -> Figure:
 
     Parameters
     ----------
-    data : `pandas.DataFrame`
-        The Cometa data loaded from `cometa.load_data`.
+    data : :class:`pandas.DataFrame`
+        The Cometa data loaded from :func:`load_data`.
 
     Returns
     -------
-    fig : Figure
-        The Figure with the data plotted.
+    fig : :class:`matplotlib.figure.Figure`
+        The :class:`~matplotlib.figure.Figure` with the data plotted.
     """
     # make sure only the EMG data is present
     emg_data = extract_emg_data(data)
@@ -179,16 +176,16 @@ def plot_acceleration(data: pd.DataFrame, *, norm: bool = True) -> Figure:
 
     Parameters
     ----------
-    data : `pandas.DataFrame`
-        The Cometa data loaded from `cometa.load_data`.
-    norm : bool, optional
+    data : :class:`pandas.DataFrame`
+        The Cometa data loaded from :func:`load_data`.
+    norm : :class:`bool`, optional
         If we should compute the norm of the acceleration vectors from
         components, by default True.
 
     Returns
     -------
-    fig : Figure
-        The Figure with the data plotted.
+    fig : :class:`matplotlib.figure.Figure`
+        The :class:`~matplotlib.figure.Figure` with the data plotted.
     """
     # make sure only the acceleration data is present
     acceleration_data = extract_acceleration_data(data)

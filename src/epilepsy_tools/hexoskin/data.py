@@ -15,7 +15,12 @@ if TYPE_CHECKING:
     from typing import Literal, TypedDict
 
     SignalHeaderDict = TypedDict(
-        "SignalHeaderDict", {"label": str, "sample_frequency": float, "dimension": str}
+        "SignalHeaderDict",
+        {
+            "label": str,
+            "sample_frequency": float,
+            "dimension": str,
+        },
     )
     HeaderDict = TypedDict(
         "HeaderDict",
@@ -30,11 +35,6 @@ if TYPE_CHECKING:
     )
 
 
-__all__ = [
-    "RecordingInfo",
-    "load_data",
-]
-
 _log = logging.getLogger(__name__)
 
 
@@ -44,11 +44,11 @@ class SignalHeader:
 
     Attributes
     ----------
-    label : str
+    label : :class:`str`
         The label of the signal.
-    sample_rate : float
+    sample_rate : :class:`float`
         The sample rate in Hz of the signal.
-    dimension : str
+    dimension : :class:`str`
         The units of the signal.
     """
 
@@ -60,23 +60,23 @@ class SignalHeader:
 @dataclass
 class RecordingInfo:
     """Stores metadata of the recording (raw signals).
-    Construct with `RecordingInfo.from_file`.
+    Construct with :class:`RecordingInfo.from_file`.
 
     Attributes
     ----------
-    patient_name : str
+    patient_name : :class:`str`
         The name of the patient of the recording.
-    sex : str
+    sex : :class:`str`
         The sex of the patient of the recording.
-    start_time : datetime.datetime
+    start_time : :class:`datetime.datetime`
         The date and time the recording started.
-    birth_date : datetime.date
+    birth_date : :class:`datetime.date`
         The birth date of the patient of the recording.
-    hexoskin_record_id : int
+    hexoskin_record_id : :class:`int`
         The ID on Hexoskin's platform of the recording.
-    hexoskin_user_id : int
+    hexoskin_user_id : :class:`int`
         The ID on Hexoskin's platform of the patient of the recording.
-    signals : list[SignalHeader]
+    signals : list[:class:`SignalHeader`]
         The list of signals (channels) in the recording.
     """
 
@@ -94,12 +94,12 @@ class RecordingInfo:
 
         Parameters
         ----------
-        file : str | PathLike
+        file : :class:`str` | :class:`os.PathLike`
             Path of the .edf file.
 
         Returns
         -------
-        RecordingInfo
+        :class:`RecordingInfo`
             The information of the recording.
         """
 
@@ -137,12 +137,12 @@ def _parse_label(label: str) -> str:
 
     Parameters
     ----------
-    label : str
+    label : :class:`str`
         The label of the channel.
 
     Returns
     -------
-    str
+    :class:`str`
         The Name part of the original label.
     """
     return label[label.index(":") + 1 :]
@@ -156,17 +156,17 @@ def generate_timestamps(
 
     Parameters
     ----------
-    start_time : datetime.datetime
-        The datetime to start the timestamps from.
-    sample_rate : float
+    start_time : :class:`datetime.datetime`
+        The :class:`~datetime.datetime` to start the timestamps from.
+    sample_rate : :class:`float`
         The number of points per seconds to generate (in hertz).
-    length : int
+    length : :class:`int`
         The total number of points to generate.
 
     Returns
     -------
-    timestamps : pandas.DatetimeIndex
-        A pandas.Index instance of datetime.datetime objects.
+    timestamps : :class:`pandas.DatetimeIndex`
+        A :class:`pandas.Index` instance of :class:`datetime.datetime` objects.
     """
     timestamps = pd.date_range(
         start=start_time,
@@ -207,20 +207,20 @@ def load_data(
 
     Parameters
     ----------
-    file : str | PathLike
+    file : :class:`str` | :class:`os.PathLike`
         Path of the .edf file.
-    as_dataframe : bool, optional
+    as_dataframe : :class:`bool`, optional
         If the data should be returned in a DataFrame or not (if False, a dict of
         Series is returned instead), by default True.
 
     Returns
     -------
-    data : pandas.DataFrame | dict[str, pandas.Series[float]]
+    data : :class:`pandas.DataFrame` | dict[:class:`str`, :class:`pandas.Series[float]`
         The data inside the .edf file.
 
     Raises
     ------
-    ValueError
+    :exc:`ValueError`
         The file provided is not a .edf file.
     """
     _log.debug(f"reading file {file}")

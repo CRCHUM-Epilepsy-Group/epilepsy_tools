@@ -12,20 +12,13 @@ import pandas as pd
 
 warnings.filterwarnings("ignore", module="c3d.c3d")
 
-__all__ = [
-    "SENSOR_LABELS",
-    "RecordingInfo",
-    "downsample",
-    "extract_emg_data",
-    "extract_acceleration_data",
-    "load_data",
-]
-
-_log = logging.getLogger(__name__)
-
 if TYPE_CHECKING:
     from collections.abc import Sequence
     from os import PathLike
+
+
+_log = logging.getLogger(__name__)
+
 
 DATETIME_FORMAT = "%d-%b-%Y %H:%M:%S.%f"
 SENSOR_LABELS = (  # these might need modifications if sensors are edited
@@ -43,21 +36,26 @@ ACCELERATION_SUFFIXES = (":X", ":Y", ":Z")
 
 class RecordingInfo:
     """Stores metadata of the recording (raw signals).
-    Construct with `RecordingInfo.from_file` or `RecordingInfo.from_data`.
+    Construct with :class:`RecordingInfo.from_file` or :class:`RecordingInfo.from_data`.
+
+    Parameters
+    ----------
+    data : :class:`pandas.DataFrame`
+        The data already loaded with :func:`load_data`
 
     Attributes
     ----------
-    fs : float
+    fs : :class:`float`
         Original sampling frequency in Hz (before downsampling).
-    samples : int
+    samples : :class:`int`
         Total number of data points.
-    channels : list[str]
+    channels : list[:class:`str`]
         List of channel labels.
-    start_time : datetime.datetime
+    start_time : :class:`datetime.datetime`
         Start date and time of recording.
-    end_time : datetime.datetime
+    end_time : :class:`datetime.datetime`
         End date and time of recording.
-    duration : datetime.timedelta
+    duration : :class:`datetime.timedelta`
         Duration of recording.
     """
 
@@ -85,12 +83,12 @@ class RecordingInfo:
 
         Parameters
         ----------
-        file : str | PathLike
+        file : :class:`str` | :class:`os.PathLike`
             Path of the .c3d file.
 
         Returns
         -------
-        RecordingInfo
+        :class:`RecordingInfo`
             The information of the recording.
         """
         data = load_data(file)
@@ -103,12 +101,12 @@ class RecordingInfo:
 
         Parameters
         ----------
-        data : pandas.DataFrame
-            The Cometa data loaded from `cometa.load_data`.
+        data : :class:`pandas.DataFrame`
+            The Cometa data loaded from :func:`load_data`.
 
         Returns
         -------
-        RecordingInfo
+        :class:`RecordingInfo`
             The information of the recording.
         """
         return cls(data)
@@ -124,9 +122,9 @@ def generate_timestamps(
 
     Parameters
     ----------
-    c3d_filepath : str | PathLike
+    c3d_filepath : :class:`str` | :class:`os.PathLike`
         Path of the .c3d file.
-    time : Sequence[float]
+    time : Sequence[:class:`float`]
         A sequence of the time elapsed since the beginning of the recordinf in seconds.
 
     Returns
@@ -174,15 +172,15 @@ def downsample(data: pd.DataFrame, *, ratio: int) -> pd.DataFrame:
 
     Parameters
     ----------
-    data : pandas.DataFrame
+    data : :class:`pandas.DataFrame`
         The Cometa data loaded from `cometa.load_data`.
-    ratio : int
+    ratio : :class:`int`
         The ratio of the data to keep. 2 means keep half of the data (1/2),
         3 means keep only one value every three (1/3).
 
     Returns
     -------
-    pandas.DataFrame
+    :class:`pandas.DataFrame`
         The downsampled DataFrame
     """
     downsampled_data = data.iloc[::ratio, :].copy()
@@ -195,12 +193,12 @@ def extract_emg_data(data: pd.DataFrame) -> pd.DataFrame:
 
     Parameters
     ----------
-    data : pandas.DataFrame
-        The Cometa data loaded from `cometa.load_data`.
+    data : :class:`pandas.DataFrame`
+        The Cometa data loaded from :func:`load_data`.
 
     Returns
     -------
-    pandas.DataFrame
+    :class:`pandas.DataFrame`
         A DataFrame with only the EMG data.
     """
     emg_cols = [c for c in data.columns if not c.endswith(ACCELERATION_SUFFIXES)]
@@ -213,12 +211,12 @@ def extract_acceleration_data(data: pd.DataFrame) -> pd.DataFrame:
 
     Parameters
     ----------
-    data : pandas.DataFrame
-        The Cometa data loaded from `cometa.load_data`.
+    data : :class:`pandas.DataFrame`
+        The Cometa data loaded from :func:`load_data`.
 
     Returns
     -------
-    pandas.DataFrame
+    :class:`pandas.DataFrame`
         A DataFrame with only the acceleration data.
     """
     accel_cols = [c for c in data.columns if c.endswith(ACCELERATION_SUFFIXES)]
@@ -232,17 +230,17 @@ def load_data(file: str | PathLike) -> pd.DataFrame:
 
     Parameters
     ----------
-    file : str | PathLike
+    file : :class:`str` | :class:`os.PathLike`
         Path of the .c3d file.
 
     Returns
     -------
-    pandas.DataFrame
+    :class:`pandas.DataFrame`
         The data inside the .c3d file.
 
     Raises
     ------
-    ValueError
+    :exc:`ValueError`
         The file provided is not a .c3d file.
     """
     _log.debug(f"reading file {file}")
