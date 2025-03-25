@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import warnings
+from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -34,6 +35,7 @@ SENSOR_LABELS = (  # these might need modifications if sensors are edited
 ACCELERATION_SUFFIXES = (":X", ":Y", ":Z")
 
 
+@dataclass
 class RecordingInfo:
     """Stores metadata of the recording (raw signals).
     Construct with :class:`RecordingInfo.from_file` or :class:`RecordingInfo.from_data`.
@@ -59,16 +61,15 @@ class RecordingInfo:
         Duration of recording.
     """
 
-    def __init__(self, data: pd.DataFrame):
-        time: Sequence[datetime] = data.index  # type: ignore
-        period = (time[1] - time[0]).total_seconds()
+    fs: float
+    samples: int
+    channels: list[str]
+    start_time: datetime
+    end_time: datetime
+    duration: timedelta = field(init=False, repr=False)
 
-        self.fs: float = 1 / period
-        self.samples: int = len(data)
-        self.channels: list[str] = list(data.columns)
-        self.start_time: datetime = time[0]
-        self.end_time: datetime = time[-1]
-        self.duration: timedelta = self.end_time - self.start_time
+    def __post_init__(self) -> None:
+        self.duration = self.end_time - self.start_time
 
     def __repr__(self) -> str:
         return (
@@ -92,7 +93,7 @@ class RecordingInfo:
             The information of the recording.
         """
         data = load_data(file)
-        return cls(data)
+        return cls.from_data(data)
 
     @classmethod
     def from_data(cls, data: pd.DataFrame) -> RecordingInfo:
@@ -109,7 +110,22 @@ class RecordingInfo:
         :class:`RecordingInfo`
             The information of the recording.
         """
-        return cls(data)
+        time: Sequence[datetime] = data.index  # type: ignore
+        period = (time[1] - time[0]).total_seconds()
+
+        fs: float = 1 / period
+        samples: int = len(data)
+        channels: list[str] = list(data.columns)
+        start_time: datetime = time[0]
+        end_time: datetime = time[-1]
+
+        return cls(
+            fs=fs,
+            samples=samples,
+            channels=channels,
+            start_time=start_time,
+            end_time=end_time,
+        )
 
 
 def generate_timestamps(
