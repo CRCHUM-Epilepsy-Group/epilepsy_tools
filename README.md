@@ -70,5 +70,7 @@ Enable logging for the module with:
 ```py
 import logging
 
-logging.getLogger("epilepsy_tools").setLevel(logging.DEBUG)
+logger = logging.getLogger("epilepsy_tools")
+logger.setLevel(logging.DEBUG)
+logger.addHandler(logging.StreamHandler())
 ```
