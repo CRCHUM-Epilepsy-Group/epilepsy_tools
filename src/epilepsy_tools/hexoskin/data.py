@@ -196,14 +196,14 @@ def load_data(
     """Read a .edf file from the Hexoskin device.
 
     Since not every metric is read with the same sampling rate on the device,
-    you can load the data as a DataFrame with `as_dataframe=True` (the default)
+    you can load the data as a DataFrame with ``as_dataframe=True`` (the default)
     that will contain NaNs for metrics with lower sample rates, or as a dict of
-    Series with `as_dataframe=False`, what will not contain NaNs but will all be
+    Series with ``as_dataframe=False``, what will not contain NaNs but will all be
     of different length.
 
     In the case of a DataFrame with NaNs, you can fill out the missing values
-    with the method `DataFrame.ffill` that will use the last non-NaN value to
-    fill the DataFrame.
+    with the method :meth:`pandas.DataFrame.ffill` that will use the last non-NaN
+    value to fill the DataFrame.
 
     Parameters
     ----------
@@ -215,7 +215,7 @@ def load_data(
 
     Returns
     -------
-    data : :class:`pandas.DataFrame` | dict[:class:`str`, :class:`pandas.Series[float]`
+    data : :class:`pandas.DataFrame` | dict[:class:`str`, :class:`pandas.Series`
         The data inside the .edf file.
 
     Raises
