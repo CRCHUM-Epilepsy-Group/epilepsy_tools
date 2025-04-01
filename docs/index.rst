@@ -35,3 +35,21 @@ With ``pip``
 .. code-block:: bash
 
    pip install git+https://github.com/CRCHUM-Epilepsy-Group/epilepsy_tools.git
+
+Logging
+-------
+
+Enable logging for the module with:
+
+.. code-block:: python
+
+   import logging
+
+   logger = logging.get_Logger("epilepsy_tools")
+   logger.setLevel(logging.DEBUG)
+   logger.addHandler(logging.StreamHandler())
+
+
+Links
+-----
+- `GitHub Repository <https://github.com/CRCHUM-Epilepsy-Group/epilepsy_tools>`_
