@@ -14,6 +14,7 @@ Documentation for the ``epilepsy_tools`` Python package, which contains pre-writ
 
    cometa
    hexoskin
+   examples
 
 Installation
 ------------
