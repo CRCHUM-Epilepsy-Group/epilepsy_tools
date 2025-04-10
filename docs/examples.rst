@@ -81,3 +81,50 @@ How to get the recordings metadata with the ``hexoskin.RecordingInfo`` object:
     for signal in recording_info.signals:
         # print information on the SignalHeader objects
         print(signal.label, signal.sample_rate)
+
+EpiDataVault
+------------
+
+First, you will need to have the annotations file, and the patient logs accessible.
+One recommended way is to store the paths to the files in a configuration file, such as ``config.py``:
+
+.. code-block:: python
+
+    # config.py
+
+    annotations: str = r"path/to/annotations.xlsx"
+    log_18: str = r"path/to/patient_log_18.xlsx
+    log_23: str = r"path/to/patient_log_23.xlsx
+    password: str = "supersecretpassword"
+
+You can then load this file and the module in a script and load the information:
+
+.. code-block:: python
+
+    from epilepsy_tools.epidatavault import (
+        load_patient_log,
+        load_annotation_file,
+        generate_patient_numbers_list,
+        build_patient_datavault,
+        build_seizure_datavault,
+    )
+    import pandas as pd
+
+    # config.py in the same directory
+    import config
+
+    patient_datavault: pd.DataFrame = build_patient_datavault(
+        annotations=load_annotation_file(config.annotations),
+        p_nums=generate_patient_numbers_list(pd.ExcelFile(config.annotations)),
+        sz_types=["FBTCS", "GTCS"],
+        log18=load_patient_log(config.log_18, "log18", config.password),
+        log23=load_patient_log(config.log_23, "log23"),
+        save_path="path/where/to/save/FBTCS_patient_datavault.parquet",
+    )
+
+    seizure_datavault: pd.DataFrame = build_seizure_datavault(
+        annotations=load_annotation_file(config.annotations),
+        p_nums=generate_patient_numbers_list(pd.ExcelFile(config.annotations)),
+        sz_types=["FBTCS", "GTCS"],
+        save_path="path/where/to/save/FBTCS_seizure_datavault.parquet",
+    )
