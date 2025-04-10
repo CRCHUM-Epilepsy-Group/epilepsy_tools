@@ -1,6 +1,11 @@
 Examples
 ========
 
+Below you will find some code examples for the various modules in the package.
+These will help you get started and understand what the main functions of each module does and how to use them.
+
+.. _Cometa Examples:
+
 Cometa
 ------
 
@@ -42,6 +47,8 @@ You can also easily create plots of the data, for quick visualization:
     fig = cometa.plot_acceleration(data)
     plt.show()  # or fig.savefig("figure_name.png") if you want to save
 
+.. _Hexoskin Examples:
+
 Hexoskin
 --------
 
@@ -81,6 +88,8 @@ How to get the recordings metadata with the ``hexoskin.RecordingInfo`` object:
     for signal in recording_info.signals:
         # print information on the SignalHeader objects
         print(signal.label, signal.sample_rate)
+
+.. _EpiDataVault Examples:
 
 EpiDataVault
 ------------

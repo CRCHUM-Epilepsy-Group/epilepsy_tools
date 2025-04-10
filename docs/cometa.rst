@@ -7,3 +7,9 @@ Cometa
 
 .. automodule:: epilepsy_tools.cometa
     :members:
+
+
+Examples
+--------
+
+See examples in :ref:`Cometa Examples<Cometa Examples>`.
