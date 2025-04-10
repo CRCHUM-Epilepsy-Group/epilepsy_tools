@@ -28,7 +28,7 @@ def test_convert_date():
 
 def test_extract_sz_info():
     df = pd.ExcelFile(config.annotations).parse("p242", header=4)
-    sz_info = esz.extract_sz_info(df, "p242", ["FBTCS"])
+    sz_info = esz.extract_seizure_info(df, "p242", ["FBTCS"])
     expected_keys = [
         "p_num",
         "sz_id",
@@ -45,7 +45,7 @@ def test_extract_sz_info():
 
 
 def test_build_sz_datavault():
-    szs = esz.build_sz_datavault(
+    szs = esz.build_seizure_datavault(
         pd.ExcelFile(config.annotations),
         config.patients,
         sz_types=["FBTCS"],

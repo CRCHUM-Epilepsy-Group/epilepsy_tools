@@ -15,13 +15,17 @@ def test_range_outtabounds():
     with pytest.raises(
         ValueError, match="Start number must be less than or equal to end number."
     ):
-        ea.generate_p_nums_list(annotations, selection="range", p_range=[1000, 10])
+        ea.generate_patient_numbers_list(
+            annotations, selection="range", p_range=[1000, 10]
+        )
 
 
 def test_three_inputs():
     annotations = ea.load_annotation_file(config.annotations)
     with pytest.raises(ValueError) as exc_info:
-        ea.generate_p_nums_list(annotations, selection="range", p_range=[100, 101, 102])
+        ea.generate_patient_numbers_list(
+            annotations, selection="range", p_range=[100, 101, 102]
+        )
 
     assert (
         str(exc_info.value) == "p_range must be a list of two integers: [start, end]."
@@ -31,7 +35,7 @@ def test_three_inputs():
 def test_other_mode():
     annotations = ea.load_annotation_file(config.annotations)
     with pytest.raises(ValueError) as exc_info:
-        ea.generate_p_nums_list(annotations, selection="something_else")
+        ea.generate_patient_numbers_list(annotations, selection="something_else")
 
     assert str(exc_info.value) == "Invalid selection mode. Use 'all' or 'range'."
 
