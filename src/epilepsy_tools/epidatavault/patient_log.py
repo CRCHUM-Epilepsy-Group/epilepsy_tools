@@ -1,6 +1,10 @@
+import io
+from typing import Literal, TypeAlias
+
 import msoffcrypto
 import pandas as pd
-import io
+
+LogType: TypeAlias = Literal["log18", "log23"]
 
 # Expected columns for validation
 EXPECTED_COLUMNS = {
@@ -86,7 +90,7 @@ def read_decrypted_excel(input_file, password, header=1) -> pd.DataFrame:
         raise ValueError(f"❌ Unexpected error reading file: {e}")
 
 
-def validate_columns(df, log_type):
+def validate_columns(df: pd.DataFrame, log_type: LogType):
     """
     Validates if the DataFrame columns match the expected schema.
 
@@ -110,7 +114,12 @@ def validate_columns(df, log_type):
         )
 
 
-def load_log(log_path, log_type, password=None, header=1) -> pd.DataFrame:
+def load_patient_log(
+    log_path: str,
+    log_type: LogType,
+    password: str | None = None,
+    header: int = 1,
+) -> pd.DataFrame:
     """
     Load log18 or log23, decrypting if neccessary, and returns cleaned DataFrames.
 

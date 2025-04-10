@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-def extract_annotation_dates(annotations: pd.ExcelFile, p_num: str) -> tuple:
+def extract_annotation_dates(annotations: pd.ExcelFile, patient_number: str) -> tuple:
     """
     Extract the start and end dates of the annotations for a patient.
 
@@ -9,7 +9,7 @@ def extract_annotation_dates(annotations: pd.ExcelFile, p_num: str) -> tuple:
     ----------
     annotations : pd.ExcelFile
         DataFrame containing patient annotations.
-    p_num : str
+    patient_number : str
         Patient number in the format 'pXXX'.
 
     Returns
@@ -17,7 +17,7 @@ def extract_annotation_dates(annotations: pd.ExcelFile, p_num: str) -> tuple:
     tuple
         A tuple containing the start and end dates of the annotations.
     """
-    annotations_df = annotations.parse(p_num, header=None)
+    annotations_df = annotations.parse(patient_number, header=None)
     start_date = pd.to_datetime(
         annotations_df.iloc[0, 1],  # type: ignore
         format="%Y-%m-%d",
@@ -32,7 +32,9 @@ def extract_annotation_dates(annotations: pd.ExcelFile, p_num: str) -> tuple:
     return start_date, end_date
 
 
-def count_sz_num(annotations: pd.DataFrame, sz_types: list[str] | None) -> int | None:
+def count_seizures(
+    annotations: pd.DataFrame, seizure_types: list[str] | None
+) -> int | None:
     """
     Count the number of seizures of each type for a patient. If no seizure types are provided, all seizure types will be counted.
 
@@ -40,7 +42,7 @@ def count_sz_num(annotations: pd.DataFrame, sz_types: list[str] | None) -> int |
     ----------
     annotations : pd.DataFrame
         DataFrame containing patient annotations.
-    sz_types : list
+    seizure_types : list
         List of seizure types to count.
 
     Returns
@@ -48,17 +50,17 @@ def count_sz_num(annotations: pd.DataFrame, sz_types: list[str] | None) -> int |
     int
         An int of the count of total seizures.
     """
-    if sz_types is None:
-        sz_types = ["all"]
+    if seizure_types is None:
+        seizure_types = ["all"]
 
     available_sz_types = set(annotations["Seizure_Classification"].unique())
 
     sz_num = {}
 
-    if sz_types == ["all"]:
+    if seizure_types == ["all"]:
         sz_types_it = available_sz_types
     else:
-        sz_types_it = sz_types
+        sz_types_it = seizure_types
     for sz_type in sz_types_it:
         if sz_type in available_sz_types:
             sz_num[sz_type] = (annotations["Seizure_Classification"] == sz_type).sum()
@@ -66,19 +68,19 @@ def count_sz_num(annotations: pd.DataFrame, sz_types: list[str] | None) -> int |
             sz_num[sz_type] = 0
     sz_num_total = int(sum(sz_num.values()))
 
-    if sz_types != ["all"] and sz_num_total == 0:
+    if seizure_types != ["all"] and sz_num_total == 0:
         sz_num_total = None
 
     return sz_num_total
 
 
-def build_pt_datavault(
+def build_patient_datavault(
     annotations: pd.ExcelFile,
     p_nums: list[str],
     sz_types: list[str] | None = None,
-    save_path: str | None = None,
     log18: pd.DataFrame | None = None,
     log23: pd.DataFrame | None = None,
+    save_path: str | None = None,
 ) -> pd.DataFrame:
     """
     Extract patient annotations for a list of patients.
@@ -91,12 +93,12 @@ def build_pt_datavault(
         List of patient numbers in the format 'pXXX'.
     sz_types : list, optional
         List of seizure types to extract information for.
-    save_path : str, optional
-        Path to save the extracted data.
     log18 : pd.DataFrame, optional
         DataFrame containing patient log information from 2018.
     log23 : pd.DataFrame, optional
         DataFrame containing patient log information from 2023.
+    save_path : str, optional
+        Path to save the extracted data.
 
     Returns
     -------
@@ -119,7 +121,7 @@ def build_pt_datavault(
 
     for p_num in p_nums:
         annotation_sheet = annotations.parse(p_num, header=4)
-        sz_counts = count_sz_num(annotation_sheet, sz_types)
+        sz_counts = count_seizures(annotation_sheet, sz_types)
         start_date, end_date = extract_annotation_dates(annotations, p_num)
 
         p_id = None

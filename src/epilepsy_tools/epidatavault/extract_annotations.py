@@ -26,7 +26,7 @@ def load_annotation_file(annotations_path: str) -> pd.ExcelFile:
     return annotations_excel
 
 
-def generate_p_nums_list(
+def generate_patient_numbers_list(
     annotations: pd.ExcelFile, selection: str = "all", p_range: list | None = None
 ) -> list:
     """

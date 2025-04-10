@@ -72,7 +72,7 @@ def create_timestamp(
     )
 
 
-def extract_sz_info(
+def extract_seizure_info(
     annotations: pd.DataFrame, p_num: str, sz_types: list[str] | None
 ) -> dict:
     """
@@ -172,7 +172,7 @@ def extract_sz_info(
     return sz_info
 
 
-def build_sz_datavault(
+def build_seizure_datavault(
     annotations: pd.ExcelFile,
     p_nums: list,
     sz_types: list | None = None,
@@ -220,7 +220,7 @@ def build_sz_datavault(
     for p_num in p_nums:
         try:
             annotation_sheet = annotations.parse(p_num, header=4)
-            sz_info = extract_sz_info(annotation_sheet, p_num, sz_types)
+            sz_info = extract_seizure_info(annotation_sheet, p_num, sz_types)
             if len(sz_info["p_num"]) > 0:
                 seizures_list.append(sz_info)
         except Exception as e:
