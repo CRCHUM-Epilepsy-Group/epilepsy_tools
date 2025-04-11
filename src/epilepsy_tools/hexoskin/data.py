@@ -215,7 +215,7 @@ def load_data(
 
     Returns
     -------
-    data : :class:`pandas.DataFrame` | dict[:class:`str`, :class:`pandas.Series`
+    data : :class:`pandas.DataFrame` | dict[:class:`str`, :class:`pandas.Series`]
         The data inside the .edf file.
 
     Raises
