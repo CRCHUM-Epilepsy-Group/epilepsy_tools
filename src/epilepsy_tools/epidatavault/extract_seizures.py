@@ -9,19 +9,19 @@ def create_timestamp(
     time: str | pd.Timestamp | datetime.datetime | None,
 ) -> pd.Timestamp | None:
     """
-    Create a timestamp from a date and time string.
+    Create a :class:`~pandas.Timestamp` from a date and time string.
 
     Parameters
     ----------
-    date : str
+    date : :class:`str`
         Date in the format 'YYYY-MM-DD'.
-    time : str
+    time : :class:`str`
         Time in the format 'HH:MM:SS'.
 
     Returns
     -------
-    pd.Timestamp
-        A pandas Timestamp object representing the given date and time.
+    :class:`pandas.Timestamp`
+        A :class:`~pandas.Timestamp` object representing the given date and time.
     """
     if pd.isna(date) or pd.isna(time) or time is None:
         return None
@@ -80,11 +80,11 @@ def extract_seizure_info(
 
     Parameters
     ----------
-    annotations : pd.DataFrame
-        DataFrame containing patient annotations.
-    p_num : str
-        Patient number in the format 'pXXX'.
-    sz_types : list
+    annotations : :class:`pandas.DataFrame`
+        :class:`~pandas.DataFrame` containing patient annotations.
+    p_num : :class:`str`
+        Patient number in the format ``pXXX``.
+    sz_types : list[:class:`str`]
         List of seizure types to extract information for.
 
     Returns
@@ -94,15 +94,15 @@ def extract_seizure_info(
 
         The dictionary will have the folowing keys:
 
-        - **p_num** (list of str): Patient number in the format 'pXXX'.
-        - **sz_id** (list of int): Seizure number that each patient had.
-        - **sz_type** (list of str): Seizure classification according to the ILAE classification.
-        - **sz_date** (list of timestamp): Date when the seizure happened.
-        - **electric_onset** (list of timestamp): Time when the electrical seizure activity began.
-        - **clinical_onset** (list of timestamp): Time when clinical seizure manifestations started.
-        - **generalization** (list of timestamp): Time when generalization of the seizure manifestations started.
-        - **motor_onset** (list of timestamp): Time when motor seizure manifestations started.
-        - **sz_offset** (list of timestamp): Time when the seizure ended.
+        - ``p_num`` (list[:class:`str`]): Patient number in the format ``pXXX``.
+        - ``sz_id`` (list[:class:`int`]): Seizure number that each patient had.
+        - ``sz_type`` (list[:class:`str`]): Seizure classification according to the ILAE classification.
+        - ``sz_date`` (list[:class:`pandas.Timestamp`]): Date when the seizure happened.
+        - ``electric_onset`` (list[:class:`pandas.Timestamp`]): Time when the electrical seizure activity began.
+        - ``clinical_onset`` (list[:class:`pandas.Timestamp`]): Time when clinical seizure manifestations started.
+        - ``generalization`` (list[:class:`pandas.Timestamp`]): Time when generalization of the seizure manifestations started.
+        - ``motor_onset`` (list[:class:`pandas.Timestamp`]): Time when motor seizure manifestations started.
+        - ``sz_offset`` (list[:class:`pandas.Timestamp`]): Time when the seizure ended.
 
     Notes
     -----
@@ -174,8 +174,8 @@ def extract_seizure_info(
 
 def build_seizure_datavault(
     annotations: pd.ExcelFile,
-    p_nums: list,
-    sz_types: list | None = None,
+    p_nums: list[str],
+    sz_types: list[str] | None = None,
     save_path: str | None = None,
 ) -> pd.DataFrame:
     """
@@ -183,31 +183,31 @@ def build_seizure_datavault(
 
     Parameters
     ----------
-    annotations : pd.ExcelFile
+    annotations : :class:`pandas.ExcelFile`
         Excel file containing patient annotations.
-    p_nums : list
+    p_nums : list[:class:`str`]
         List of patient numbers in the format 'pXXX'.
-    sz_types : list, optional
+    sz_types : list[:class:`str`] | ``None``, optional
         List of seizure types to extract annotations for.
-    save_path : str, optional
+    save_path : :class:`str` | ``None``, optional
         Path to save the extracted data.
 
     Returns
     -------
-    pd.DataFrame
-        DataFrame containing seizure annotations for the specified patients.
+    :class:`pandas.DataFrame`
+        :class:`~pandas.DataFrame` containing seizure annotations for the specified patients.
 
         Each row in the DataFrame represents a seizure, and the columns are as follows:
 
-        - **p_num** (str): Patient number in the format 'pXXX'.
-        - **sz_id** (int): Seizure number that each patient had.
-        - **sz_type** (str): Seizure classification according to the ILAE classification.
-        - **sz_date** (timestamp): Date when the seizure happened.
-        - **electric_onset** (timestamp): Time when the electrical seizure activity began.
-        - **clinical_onset** (timestamp): Time when clinical seizure manifestations started.
-        - **generalization** (timestamp): Time when generalization of the seizure manifestations started.
-        - **motor_onset** (timestamp): Time when motor seizure manifestations started.
-        - **sz_offset** (timestamp): Time when the seizure ended.
+        - ``p_num`` (:class:`str`): Patient number in the format ``pXXX``.
+        - ``sz_id`` (:class:`int`): Seizure number that each patient had.
+        - ``sz_type`` (:class:`str`): Seizure classification according to the ILAE classification.
+        - ``sz_date`` (:class:`~pandas.Timestamp`): Date when the seizure happened.
+        - ``electric_onset`` (:class:`~pandas.Timestamp`): Time when the electrical seizure activity began.
+        - ``clinical_onset`` (:class:`~pandas.Timestamp`): Time when clinical seizure manifestations started.
+        - ``generalization`` (:class:`~pandas.Timestamp`): Time when generalization of the seizure manifestations started.
+        - ``motor_onset`` (:class:`~pandas.Timestamp`): Time when motor seizure manifestations started.
+        - ``sz_offset`` (:class:`~pandas.Timestamp`): Time when the seizure ended.
 
     Notes
     -----

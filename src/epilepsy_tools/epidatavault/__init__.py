@@ -4,15 +4,16 @@ from .extract_patients import (
     count_seizures,
     extract_annotation_dates,
 )
-from .extract_seizures import build_seizure_datavault
+from .extract_seizures import build_seizure_datavault, extract_seizure_info
 from .patient_log import load_patient_log
 
 __all__ = [
-    "load_annotation_file",
-    "generate_patient_numbers_list",
-    "extract_annotation_dates",
-    "count_seizures",
     "build_patient_datavault",
     "build_seizure_datavault",
+    "count_seizures",
+    "extract_annotation_dates",
+    "extract_seizure_info",
+    "generate_patient_numbers_list",
+    "load_annotation_file",
     "load_patient_log",
 ]

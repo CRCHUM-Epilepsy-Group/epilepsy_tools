@@ -55,21 +55,31 @@ EXPECTED_COLUMNS = {
 }
 
 
-def read_decrypted_excel(input_file, password, header=1) -> pd.DataFrame:
-    """
-    Reads and decrypts a password-protected Excel file.
+def read_decrypted_excel(
+    input_file: str, password: str, header: int = 1
+) -> pd.DataFrame:
+    """Reads and decrypts a password-protected Excel file.
 
-    Parameters:
-        input_file (str): Path to the encrypted Excel file.
-        password (str): Password to decrypt the file.
-        header (int): Row number to use as column names.
+    Parameters
+    ----------
+    input_file : :class:`str`
+        Path to the encrypted Excel file.
+    password : :class:`str`
+        Password to decrypt the file.
+    header : :class:`int`, optional
+        Row number to use as column names, by default 1.
 
-    Returns:
-        pd.DataFrame: Decrypted Excel data as a Pandas DataFrame.
+    Returns
+    -------
+    pd.DataFrame
+        Decrypted Excel data as a Pandas DataFrame.
 
-    Raises:
-        ValueError: If decryption fails due to an incorrect password or corruption.
-        FileNotFoundError: If the input file does not exist.
+    Raises
+    ------
+    ValueError
+        If decryption fails due to an incorrect password or corruption.
+    FileNotFoundError
+        If the input file does not exist.
     """
     try:
         with open(input_file, "rb") as f:
@@ -91,15 +101,19 @@ def read_decrypted_excel(input_file, password, header=1) -> pd.DataFrame:
 
 
 def validate_columns(df: pd.DataFrame, log_type: LogType):
-    """
-    Validates if the DataFrame columns match the expected schema.
+    """Validates if the DataFrame columns match the expected schema.
 
-    Parameters:
-        df (pd.DataFrame): The DataFrame to validate.
-        log_type (str): Either "log18" or "log23".
+    Parameters
+    ----------
+    df ::class:`pandas.DataFrame`
+        The :class:`~pandas.DataFrame` to validate.
+    log_type : :class:`str`
+        Either "log18" or "log23".
 
-    Raises:
-        ValueError: If the columns do not match the expected schema.
+    Raises
+    ------
+    ValueError
+        If the columns do not match the expected schema.
     """
     expected_cols = EXPECTED_COLUMNS.get(log_type, [])
     actual_cols = df.columns.tolist()
@@ -120,18 +134,30 @@ def load_patient_log(
     password: str | None = None,
     header: int = 1,
 ) -> pd.DataFrame:
-    """
-    Load log18 or log23, decrypting if neccessary, and returns cleaned DataFrames.
+    """Load log18 or log23, decrypting if neccessary, and returns cleaned DataFrames.
 
-    Parameters:
-        file_path (str): Path to the Excel file.
-        log_type (str): Either "log18" or "log23" (plain).
-        password (str, optional): Password to decrypt the file (only for log18).
-        header (int, optional): Row number to use as column names. In date of creation, header = 1 is fucntional, if changed, verify in log
-    Returns:
-        log (pd.DataFrame): Cleaned DataFrame.
-    """
+    Parameters
+    ----------
+    log_path : :class:`str`
+        Path to the Excel file.
+    log_type : :class:`str`
+        Either ``"log18"`` or ``"log23"`` (plain).
+    password : :class:`str` | ``None``, optional
+        Password to decrypt the file (only for log18), by default ``None``.
+    header : :class:`int`, optional
+        Row number to use as column names. In date of creation, ``header=1`` is
+        functional, if changed, verify in log, by default 1.
 
+    Returns
+    -------
+    :class:`pandas.DataFrame`
+        Cleaned :class:`~pandas.DataFrame`.
+
+    Raises
+    ------
+    ValueError
+        Provided ``log_type`` not allowed.
+    """
     if log_type == "log18" and password:
         log = read_decrypted_excel(log_path, password=password, header=header)
         log = log.astype(str)

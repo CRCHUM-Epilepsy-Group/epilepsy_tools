@@ -1,3 +1,5 @@
+from typing import Literal
+
 import pandas as pd
 
 
@@ -7,12 +9,12 @@ def load_annotation_file(annotations_path: str) -> pd.ExcelFile:
 
     Parameters
     ----------
-    annotations_path : str
+    annotations_path : :class:`str`
         Path to the Excel file containing the annotations.
 
     Returns
     -------
-    pd.ExcelFile
+    :class:`pandas.ExcelFile`
         The loaded annotations file.
     """
 
@@ -27,31 +29,33 @@ def load_annotation_file(annotations_path: str) -> pd.ExcelFile:
 
 
 def generate_patient_numbers_list(
-    annotations: pd.ExcelFile, selection: str = "all", p_range: list | None = None
-) -> list:
-    """
-    Generate a list of patient numbers based on the specified selection mode.
+    annotations: pd.ExcelFile,
+    selection: Literal["all", "range"] = "all",
+    p_range: list[int] | None = None,
+) -> list[str]:
+    """Generate a list of patient numbers based on the specified selection mode.
 
     Parameters
     ----------
-    annotations : pd.ExcelFile
+    annotations : :class:`pandas.ExcelFile`
         Excel file containing patient annotations.
-    selection : str, optional
-        Selection mode. Options:
-        - **"all"**: Extracts patient numbers from the sheet names in the annotations file.
-        - **"range"**: Generates patient numbers within a specified range.
-    p_range : list, optional
-        A list containing two integers `[start, end]` for range selection.
+    selection : Literal["all", "range"], optional
+        Selection mode. ``"all"``: Extracts patient numbers from the sheet names
+        in the annotations file (default). ``"range"``: Generates patient numbers
+        within a specified range.
+    p_range : list[int] | ``None``, optional
+        A list containing two integers ``[start, end]`` for range selection,
+        by default ``None``.
 
     Returns
     -------
-    list
+    list[:class:`str`]
         A list of patient numbers in the format 'pXXX'.
 
     Raises
     ------
-    ValueError
-        If an invalid selection mode is provided or `p_range` is improperly formatted.
+    :exc:`ValueError`
+        Error loading the Excel file, or invalid arguments were passed.
     """
     if selection == "all":
         try:

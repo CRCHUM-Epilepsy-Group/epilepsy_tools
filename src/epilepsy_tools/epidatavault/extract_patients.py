@@ -1,20 +1,22 @@
 import pandas as pd
 
 
-def extract_annotation_dates(annotations: pd.ExcelFile, patient_number: str) -> tuple:
+def extract_annotation_dates(
+    annotations: pd.ExcelFile, patient_number: str
+) -> tuple[pd.Timestamp, pd.Timestamp]:
     """
     Extract the start and end dates of the annotations for a patient.
 
     Parameters
     ----------
-    annotations : pd.ExcelFile
+    annotations : :class:`pandas.ExcelFile`
         DataFrame containing patient annotations.
-    patient_number : str
-        Patient number in the format 'pXXX'.
+    patient_number : :class:`str`
+        Patient number in the format ``pXXX``.
 
     Returns
     -------
-    tuple
+    tuple[:class:`pandas.Timestamp`, :class:`pandas.Timestamp`]
         A tuple containing the start and end dates of the annotations.
     """
     annotations_df = annotations.parse(patient_number, header=None)
@@ -40,15 +42,15 @@ def count_seizures(
 
     Parameters
     ----------
-    annotations : pd.DataFrame
+    annotations : :class:`pandas.DataFrame`
         DataFrame containing patient annotations.
-    seizure_types : list
+    seizure_types : list[:class:`str`]
         List of seizure types to count.
 
     Returns
     -------
-    int
-        An int of the count of total seizures.
+    :class:`int`
+        An :class:`int` of the count of total seizures.
     """
     if seizure_types is None:
         seizure_types = ["all"]
@@ -82,37 +84,42 @@ def build_patient_datavault(
     log23: pd.DataFrame | None = None,
     save_path: str | None = None,
 ) -> pd.DataFrame:
-    """
-    Extract patient annotations for a list of patients.
+    """Extract patient annotations for a list of patients.
 
     Parameters
     ----------
-    annotations : pd.ExcelFile
+    annotations : :class:`pandas.ExcelFile`
         Excel file containing patient annotations.
-    p_nums : list
-        List of patient numbers in the format 'pXXX'.
-    sz_types : list, optional
-        List of seizure types to extract information for.
-    log18 : pd.DataFrame, optional
-        DataFrame containing patient log information from 2018.
-    log23 : pd.DataFrame, optional
-        DataFrame containing patient log information from 2023.
-    save_path : str, optional
-        Path to save the extracted data.
+    p_nums : list[:class:`str`]
+        List of patient numbers in the format ``pXXX``.
+    sz_types : list[:class:`str`] | ``None``, optional
+        List of seizure types to extract information for, by default ``None``.
+    log18 : :class:`pandas.DataFrame` | ``None``, optional
+        DataFrame containing patient log information from 2018, by default ``None``.
+    log23 : :class:`pandas.DataFrame` | ``None``, optional
+        DataFrame containing patient log information from 2023, by default ``None``.
+    save_path : :class:`str` | ``None``, optional
+        Path to save the extracted data, by default ``None``.
 
     Returns
     -------
-    pd.DataFrame
+    :class:`pandas.DataFrame`
         A DataFrame containing the extracted patient annotation information.
 
         The DataFrame will have the following columns:
 
-        - **patient_num** (str): Patient number in the format "pXXX".
-        - **patient_id** (str): Patient ID (CHUM file number).
-        - **patient_name** (str): Name of the patient.
-        - **start_date** (timestamp): Date and time when annotation monitoring started, in "YYYY-MM-DD HH:MM:SS" format.
-        - **end_date** (timestamp): Date and time when annotation monitoring ended, in "YYYY-MM-DD HH:MM:SS" format.
-        - **num_seizures** (dict): A dictionary containing the count (int) of each seizure type for the patient.
+        - ``patient_num`` (:class:`str`): Patient number in the format "pXXX".
+        - ``patient_id`` (:class:`str`): Patient ID (CHUM file number).
+        - ``patient_name`` (:class:`str`): Name of the patient.
+        - ``start_date`` (:class:`pandas.Timestamp`): Date and time when annotation monitoring started, in "YYYY-MM-DD HH:MM:SS" format.
+        - ``end_date`` (:class:`pandas.Timestamp`): Date and time when annotation monitoring ended, in "YYYY-MM-DD HH:MM:SS" format.
+        - ``num_seizures`` (dict[:class:`str`, :class:`int`]): A dictionary containing the count of each seizure type for the patient.
+
+
+    Raises
+    ------
+    :exc:`ValueError`
+        Raised when no :class:`pandas.DataFrame` is passed for neither ``log18`` or ``log23``.
     """
     if log18 is None and log23 is None:
         raise ValueError("At least one of log18 or log23 must be provided.")
