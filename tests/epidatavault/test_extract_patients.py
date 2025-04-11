@@ -36,7 +36,7 @@ def test_build_pt_datavault():
     pts = epy.build_patient_datavault(
         pd.ExcelFile(config.annotations),
         config.patients,
-        sz_types=["FBTCS"],
+        seizure_types=["FBTCS"],
         save_path=None,
         log18=logger.load_patient_log(config.log18, "log18", config.password),
         log23=logger.load_patient_log(config.log23, "log23"),

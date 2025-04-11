@@ -73,7 +73,7 @@ def create_timestamp(
 
 
 def extract_seizure_info(
-    annotations: pd.DataFrame, p_num: str, sz_types: list[str] | None
+    annotations: pd.DataFrame, patient_number: str, seizure_types: list[str] | None
 ) -> dict:
     """
     Extract seizure information for a patient.
@@ -82,9 +82,9 @@ def extract_seizure_info(
     ----------
     annotations : :class:`pandas.DataFrame`
         :class:`~pandas.DataFrame` containing patient annotations.
-    p_num : :class:`str`
+    patient_number : :class:`str`
         Patient number in the format ``pXXX``.
-    sz_types : list[:class:`str`]
+    seizure_types : list[:class:`str`]
         List of seizure types to extract information for.
 
     Returns
@@ -110,8 +110,8 @@ def extract_seizure_info(
     - All are in the format "YYYY-MM-DD HH:MM:SS".
     """
 
-    if sz_types is None or sz_types == ["all"]:
-        sz_types = list(annotations["Seizure_Classification"].unique())
+    if seizure_types is None or seizure_types == ["all"]:
+        seizure_types = list(annotations["Seizure_Classification"].unique())
 
     sz_info = {
         "p_num": [],
@@ -125,14 +125,14 @@ def extract_seizure_info(
         "sz_offset": [],
     }
 
-    for sz_type in sz_types:
+    for sz_type in seizure_types:
         annotation_filtered = annotations[
             annotations["Seizure_Classification"] == sz_type
         ]
         # Loop over each row in the filtered annotations
         for index, row in annotation_filtered.iterrows():
             # Append the row's data to the corresponding list in sz_info
-            sz_info["p_num"].append(p_num)
+            sz_info["p_num"].append(patient_number)
 
             sz_id = row["Seizure_count"]
 
@@ -174,8 +174,8 @@ def extract_seizure_info(
 
 def build_seizure_datavault(
     annotations: pd.ExcelFile,
-    p_nums: list[str],
-    sz_types: list[str] | None = None,
+    patient_numbers: list[str],
+    seizure_types: list[str] | None = None,
     save_path: str | None = None,
 ) -> pd.DataFrame:
     """
@@ -185,9 +185,9 @@ def build_seizure_datavault(
     ----------
     annotations : :class:`pandas.ExcelFile`
         Excel file containing patient annotations.
-    p_nums : list[:class:`str`]
+    patient_numbers : list[:class:`str`]
         List of patient numbers in the format 'pXXX'.
-    sz_types : list[:class:`str`] | ``None``, optional
+    seizure_types : list[:class:`str`] | ``None``, optional
         List of seizure types to extract annotations for.
     save_path : :class:`str` | ``None``, optional
         Path to save the extracted data.
@@ -217,10 +217,10 @@ def build_seizure_datavault(
 
     seizures_list = []
 
-    for p_num in p_nums:
+    for p_num in patient_numbers:
         try:
             annotation_sheet = annotations.parse(p_num, header=4)
-            sz_info = extract_seizure_info(annotation_sheet, p_num, sz_types)
+            sz_info = extract_seizure_info(annotation_sheet, p_num, seizure_types)
             if len(sz_info["p_num"]) > 0:
                 seizures_list.append(sz_info)
         except Exception as e:

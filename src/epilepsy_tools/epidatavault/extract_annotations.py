@@ -31,7 +31,7 @@ def load_annotation_file(annotations_path: str) -> pd.ExcelFile:
 def generate_patient_numbers_list(
     annotations: pd.ExcelFile,
     selection: Literal["all", "range"] = "all",
-    p_range: list[int] | None = None,
+    parient_range: list[int] | None = None,
 ) -> list[str]:
     """Generate a list of patient numbers based on the specified selection mode.
 
@@ -43,7 +43,7 @@ def generate_patient_numbers_list(
         Selection mode. ``"all"``: Extracts patient numbers from the sheet names
         in the annotations file (default). ``"range"``: Generates patient numbers
         within a specified range.
-    p_range : list[int] | ``None``, optional
+    parient_range : list[int] | ``None``, optional
         A list containing two integers ``[start, end]`` for range selection,
         by default ``None``.
 
@@ -67,12 +67,12 @@ def generate_patient_numbers_list(
         ]
     elif selection == "range":
         if not (
-            isinstance(p_range, list)
-            and len(p_range) == 2
-            and all(isinstance(n, int) for n in p_range)
+            isinstance(parient_range, list)
+            and len(parient_range) == 2
+            and all(isinstance(n, int) for n in parient_range)
         ):
             raise ValueError("p_range must be a list of two integers: [start, end].")
-        start, end = p_range
+        start, end = parient_range
         if start > end:
             raise ValueError("Start number must be less than or equal to end number.")
         p_nums = [f"p{num}" for num in range(start, end + 1)]

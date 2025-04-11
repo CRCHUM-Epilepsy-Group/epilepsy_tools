@@ -48,7 +48,7 @@ def test_build_sz_datavault():
     szs = esz.build_seizure_datavault(
         pd.ExcelFile(config.annotations),
         config.patients,
-        sz_types=["FBTCS"],
+        seizure_types=["FBTCS"],
         save_path=None,
     )
 

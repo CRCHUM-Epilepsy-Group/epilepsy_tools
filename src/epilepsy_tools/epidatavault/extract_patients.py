@@ -78,8 +78,8 @@ def count_seizures(
 
 def build_patient_datavault(
     annotations: pd.ExcelFile,
-    p_nums: list[str],
-    sz_types: list[str] | None = None,
+    patient_numbers: list[str],
+    seizure_types: list[str] | None = None,
     log18: pd.DataFrame | None = None,
     log23: pd.DataFrame | None = None,
     save_path: str | None = None,
@@ -90,9 +90,9 @@ def build_patient_datavault(
     ----------
     annotations : :class:`pandas.ExcelFile`
         Excel file containing patient annotations.
-    p_nums : list[:class:`str`]
+    patient_numbers : list[:class:`str`]
         List of patient numbers in the format ``pXXX``.
-    sz_types : list[:class:`str`] | ``None``, optional
+    seizure_types : list[:class:`str`] | ``None``, optional
         List of seizure types to extract information for, by default ``None``.
     log18 : :class:`pandas.DataFrame` | ``None``, optional
         DataFrame containing patient log information from 2018, by default ``None``.
@@ -126,9 +126,9 @@ def build_patient_datavault(
 
     patients_list = []
 
-    for p_num in p_nums:
+    for p_num in patient_numbers:
         annotation_sheet = annotations.parse(p_num, header=4)
-        sz_counts = count_seizures(annotation_sheet, sz_types)
+        sz_counts = count_seizures(annotation_sheet, seizure_types)
         start_date, end_date = extract_annotation_dates(annotations, p_num)
 
         p_id = None

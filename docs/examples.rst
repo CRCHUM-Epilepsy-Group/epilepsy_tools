@@ -122,18 +122,22 @@ You can then load this file and the module in a script and load the information:
     # config.py in the same directory
     import config
 
+    annotations = load_annotation_file(config.annotations)
+    patient_numbers = generate_patient_numbers_list(pd.ExcelFile(config.annotations))
+    seizure_types = ["FBTCS", "GTCS"]
+
     patient_datavault: pd.DataFrame = build_patient_datavault(
-        annotations=load_annotation_file(config.annotations),
-        p_nums=generate_patient_numbers_list(pd.ExcelFile(config.annotations)),
-        sz_types=["FBTCS", "GTCS"],
+        annotations=annotations,
+        patient_numbers=patient_numbers,
+        seizure_types=seizure_types,
         log18=load_patient_log(config.log_18, "log18", config.password),
         log23=load_patient_log(config.log_23, "log23"),
         save_path="path/where/to/save/FBTCS_patient_datavault.parquet",
     )
 
     seizure_datavault: pd.DataFrame = build_seizure_datavault(
-        annotations=load_annotation_file(config.annotations),
-        p_nums=generate_patient_numbers_list(pd.ExcelFile(config.annotations)),
-        sz_types=["FBTCS", "GTCS"],
+        annotations=annotations,
+        patient_numbers=patient_numbers,
+        seizure_types=seizure_types,
         save_path="path/where/to/save/FBTCS_seizure_datavault.parquet",
     )
