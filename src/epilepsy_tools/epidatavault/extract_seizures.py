@@ -6,7 +6,7 @@ import pandas as pd
 
 def create_timestamp(
     date: str | pd.Timestamp | datetime.datetime | None,
-    time: str | pd.Timestamp | datetime.datetime | None,
+    time: str | pd.Timestamp | datetime.datetime | datetime.timedelta | None,
 ) -> pd.Timestamp | None:
     """
     Create a :class:`~pandas.Timestamp` from a date and time string.
@@ -59,6 +59,9 @@ def create_timestamp(
 
     elif isinstance(time, (pd.Timestamp, datetime.time, datetime.datetime)):
         time_ts = time
+
+    elif isinstance(time, datetime.timedelta):
+        time_ts = (datetime.datetime.min + time).time()
 
     # Create and return a pd.Timestamp object with the combined date and time
     return pd.Timestamp(

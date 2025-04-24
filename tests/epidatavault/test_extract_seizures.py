@@ -1,3 +1,5 @@
+import datetime
+
 import pandas as pd
 
 from epilepsy_tools.epidatavault import extract_seizures as esz
@@ -18,6 +20,12 @@ def test_create_timestamp_nan():
 def test_create_timestamp_yes():
     assert esz.create_timestamp(pd.Timestamp("2021-01-01"), "yes") is None
     assert esz.create_timestamp(pd.Timestamp("2021-01-01"), "no") is None
+
+
+def test_create_timestamp_time_timedelta():
+    assert esz.create_timestamp(
+        "2021-01-01", datetime.timedelta(0, 3600)
+    ) == pd.Timestamp("2021-01-01 01:00:00")
 
 
 def test_convert_date():
