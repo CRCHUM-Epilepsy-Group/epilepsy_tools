@@ -1,5 +1,6 @@
 import datetime
 import traceback
+from os import PathLike
 
 import pandas as pd
 
@@ -179,7 +180,7 @@ def build_seizure_datavault(
     annotations: pd.ExcelFile,
     patient_numbers: list[str],
     seizure_types: list[str] | None = None,
-    save_path: str | None = None,
+    save_path: str | PathLike | None = None,
 ) -> pd.DataFrame:
     """
     Extract seizure annotations for a list of patients.

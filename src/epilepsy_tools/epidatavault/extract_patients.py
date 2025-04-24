@@ -1,3 +1,5 @@
+from os import PathLike
+
 import pandas as pd
 
 
@@ -82,7 +84,7 @@ def build_patient_datavault(
     seizure_types: list[str] | None = None,
     log18: pd.DataFrame | None = None,
     log23: pd.DataFrame | None = None,
-    save_path: str | None = None,
+    save_path: str | PathLike | None = None,
 ) -> pd.DataFrame:
     """Extract patient annotations for a list of patients.
 
