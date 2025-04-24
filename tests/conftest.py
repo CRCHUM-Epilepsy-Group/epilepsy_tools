@@ -3,6 +3,7 @@ import logging
 disable_loggers = [
     "matplotlib",
     "PIL",
+    "msoffcrypto",
 ]
 
 

@@ -170,3 +170,4 @@ cython_debug/
 tests/c3d_sample/*
 tests/edf_sample/*
 tests/images/*
+tests/epidatavault/config.py

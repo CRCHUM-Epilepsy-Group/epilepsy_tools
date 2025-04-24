@@ -1,6 +1,11 @@
 Examples
 ========
 
+Below you will find some code examples for the various modules in the package.
+These will help you get started and understand what the main functions of each module does and how to use them.
+
+.. _Cometa Examples:
+
 Cometa
 ------
 
@@ -42,6 +47,8 @@ You can also easily create plots of the data, for quick visualization:
     fig = cometa.plot_acceleration(data)
     plt.show()  # or fig.savefig("figure_name.png") if you want to save
 
+.. _Hexoskin Examples:
+
 Hexoskin
 --------
 
@@ -81,3 +88,56 @@ How to get the recordings metadata with the ``hexoskin.RecordingInfo`` object:
     for signal in recording_info.signals:
         # print information on the SignalHeader objects
         print(signal.label, signal.sample_rate)
+
+.. _EpiDataVault Examples:
+
+EpiDataVault
+------------
+
+First, you will need to have the annotations file, and the patient logs accessible.
+One recommended way is to store the paths to the files in a configuration file, such as ``config.py``:
+
+.. code-block:: python
+
+    # config.py
+
+    annotations: str = r"path/to/annotations.xlsx"
+    log_18: str = r"path/to/patient_log_18.xlsx
+    log_23: str = r"path/to/patient_log_23.xlsx
+    password: str = "supersecretpassword"
+
+You can then load this file and the module in a script and load the information:
+
+.. code-block:: python
+
+    from epilepsy_tools.epidatavault import (
+        load_patient_log,
+        load_annotation_file,
+        generate_patient_numbers_list,
+        build_patient_datavault,
+        build_seizure_datavault,
+    )
+    import pandas as pd
+
+    # config.py in the same directory
+    import config
+
+    annotations = load_annotation_file(config.annotations)
+    patient_numbers = generate_patient_numbers_list(pd.ExcelFile(config.annotations))
+    seizure_types = ["FBTCS", "GTCS"]
+
+    patient_datavault: pd.DataFrame = build_patient_datavault(
+        annotations=annotations,
+        patient_numbers=patient_numbers,
+        seizure_types=seizure_types,
+        log18=load_patient_log(config.log_18, "log18", config.password),
+        log23=load_patient_log(config.log_23, "log23"),
+        save_path="path/where/to/save/FBTCS_patient_datavault.parquet",
+    )
+
+    seizure_datavault: pd.DataFrame = build_seizure_datavault(
+        annotations=annotations,
+        patient_numbers=patient_numbers,
+        seizure_types=seizure_types,
+        save_path="path/where/to/save/FBTCS_seizure_datavault.parquet",
+    )
