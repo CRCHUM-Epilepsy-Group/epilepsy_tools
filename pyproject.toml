@@ -19,12 +19,12 @@
         "pandas>=2,<3",
         "pyarrow>=19.0.1",
         "pyedflib>=0.1.38",
-]
+    ]
     description = "Library to handle data for the various connected wearables used in the epilepsy research lab at CRCHUM."
     name = "epilepsy-tools"
     readme = { file = "README.md", content-type = "text/markdown" }
     requires-python = ">=3.10"
-    version = "2025.03.2"
+    version = "2025.04.24"
 
 [build-system]
     build-backend = "setuptools.build_meta"
