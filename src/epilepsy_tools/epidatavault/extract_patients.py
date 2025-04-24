@@ -100,7 +100,7 @@ def build_patient_datavault(
         DataFrame containing patient log information from 2018, by default ``None``.
     log23 : :class:`pandas.DataFrame` | ``None``, optional
         DataFrame containing patient log information from 2023, by default ``None``.
-    save_path : :class:`str` | ``None``, optional
+    save_path : :class:`str` | :class:`os.PathLike` | ``None``, optional
         Path to save the extracted data, by default ``None``.
 
     Returns

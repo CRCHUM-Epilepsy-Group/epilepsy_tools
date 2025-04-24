@@ -193,7 +193,7 @@ def build_seizure_datavault(
         List of patient numbers in the format 'pXXX'.
     seizure_types : list[:class:`str`] | ``None``, optional
         List of seizure types to extract annotations for.
-    save_path : :class:`str` | ``None``, optional
+    save_path : :class:`str` | :class:`os.PathLike` | ``None``, optional
         Path to save the extracted data.
 
     Returns
