@@ -36,7 +36,7 @@ This is a quick example that loads data from a Cometa file (.c3d)
 ```py
 from epilepsy_tools import cometa
 
-file_path = "some/directory/data.c3d
+file_path = "some/directory/data.c3d"
 
 data = cometa.load_data(file_path)  # returns a pandas.DataFrame
 recording_info = cometa.RecordingInfo.from_data(data)
