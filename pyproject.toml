@@ -16,7 +16,7 @@
         "msoffcrypto-tool>=5.4.2",
         "numpy<3",
         "openpyxl>=3.1.5",
-        "pandas>=2,<3",
+        "pandas>=2,<4",
         "pyarrow>=19.0.1",
         "pyedflib>=0.1.38",
     ]
@@ -24,7 +24,7 @@
     name = "epilepsy-tools"
     readme = { file = "README.md", content-type = "text/markdown" }
     requires-python = ">=3.10"
-    version = "2025.04.24"
+    version = "2026.03.09"
 
 [build-system]
     build-backend = "setuptools.build_meta"
